@@ -1,8 +1,6 @@
-#ifndef __HLIB_PRETTY_COLORS
-#define __HLIB_PRETTY_COLORS
-#include <stdarg.h>
+#ifndef __HLIB_UTILS_PRETTY_COLORS
+#define __HLIB_UTILS_PRETTY_COLORS
 #include <stdio.h>
-#include <stdlib.h>
 
 #define ColorDefault "0"
 #define ColorBlack "30"
@@ -25,7 +23,7 @@
 #define BGColorWhite "47"
 
 /** alias **/
-#ifndef __HLIB_PRETTY_COLOR_NO_ALIAS
+#ifndef __HLIB_UTILS_PRETTY_COLOR_NO_ALIAS
 #define CDf ColorDefault
 #define CBl ColorBlack
 #define CRe ColorRed
@@ -45,6 +43,9 @@
 #define BCPu BGColorPurple
 #define BCCy BGColorCyan
 #define BCWh BGColorWhite
-#endif /* __HLIB_PRETTY_COLOR_ALIAS */
+#endif /* __HLIB_UTILS_PRETTY_COLOR_ALIAS */
 
-#endif /* __HLIB_PRETTY_COLORS */
+#define color_string(str, bg_color, text_color) "\033[" text_color ";" bg_color "m" str "\033[0m"
+#define printf_color_str(str, bg_color, text_color) printf(color_string(str, bg_color, text_color))
+
+#endif /* __HLIB_UTILS_PRETTY_COLORS */

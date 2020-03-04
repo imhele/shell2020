@@ -1,0 +1,9 @@
+#ifndef __HLIB_UTILS_EXCEPTIONS
+#define __HLIB_UTILS_EXCEPTIONS
+
+typedef enum EXCEPTION
+{
+  EXCEPTION_ASSERT,
+}
+
+#endif /* __HLIB_UTILS_EXCEPTIONS */
