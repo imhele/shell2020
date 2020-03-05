@@ -50,6 +50,9 @@
   "\033[" text_color ";" bg_color "m" str "\033[0m"
 
 #define printf_color_str(str, bg_color, text_color) \
+  printf(color_string(str, bg_color, text_color))
+
+#define printf_color_str_endl(str, bg_color, text_color) \
   printf(color_string(str, bg_color, text_color) "\n")
 
 #endif /* __HLIB_UTILS_PRETTY_COLORS */

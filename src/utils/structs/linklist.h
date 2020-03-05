@@ -21,7 +21,7 @@ struct LinkList *LinkListUnshift(struct LinkList *head, ...)
   struct LinkList *new_head = HLIB_CALLOC(struct LinkList);
 
   va_start(argv, head);
-  for (prev = new_head; value = va_arg(argv, void *); prev = curr)
+  for (prev = new_head; (value = va_arg(argv, void *)) != NULL; prev = curr)
     (prev->next = curr = HLIB_CALLOC(struct LinkList))->value = value;
   va_end(argv);
 
@@ -30,6 +30,23 @@ struct LinkList *LinkListUnshift(struct LinkList *head, ...)
   free(new_head);
 
   return head;
+}
+
+void LinkListFree(struct LinkList **head)
+{
+  if (head == NULL || *head == NULL)
+    return;
+
+  struct LinkList *next;
+  struct LinkList *curr = *head;
+  while (curr)
+  {
+    next = curr->next;
+    free(curr);
+    curr = next;
+  }
+
+  *head = NULL;
 }
 
 void *LinkListGetter(struct LinkList *head, int index)

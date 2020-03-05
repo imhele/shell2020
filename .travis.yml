@@ -15,4 +15,4 @@ matrix:
 before_install:
   - eval "${MATRIX_EVAL}"
 script:
-  - sh ./test.sh
+  - sh ./scripts/test.sh
