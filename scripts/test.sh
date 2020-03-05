@@ -10,15 +10,11 @@ test_directory() {
     return 0
   fi
 
-  for dirent in "$1/*"; do
-    if test -f $dirent; then
-      print_and_exec "gcc $dirent -o ./temp.o"
-      ./temp.o
-      rm ./temp.o
-      echo
-    elif test ! $dirent = $1; then
-      test_directory $dirent
-    fi
+  for dirent in $(find $1 -depth -type f -name "*.c"); do
+    print_and_exec "gcc $dirent -o ./temp.o"
+    ./temp.o
+    rm ./temp.o
+    echo
   done
 }
 
