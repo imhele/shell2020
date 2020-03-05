@@ -7,6 +7,7 @@
 #include <limits.h>
 #include "../helpers/calloc.h"
 #include "../helpers/endarg.h"
+#include "./bool.h"
 
 struct LinkList
 {
@@ -191,6 +192,16 @@ struct LinkList *LinkListConcat(struct LinkList *head, ...)
   va_end(argv);
 
   return new_head;
+}
+
+struct LinkList *LinkListFind(
+    struct LinkList *head, bool (*find)(void *item, int index, struct LinkList *head))
+{
+
+  for (int index = 0; head != NULL; index++, head = head->next)
+    if (find(head->value, index, head))
+      return head;
+  return NULL;
 }
 
 #endif /* __HLIB_UTILS_STRUCTS_LINKLIST */

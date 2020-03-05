@@ -84,6 +84,18 @@ bool testLinkListConcat() {
   return flag;
 }
 
+bool __testLinkListFind(void *item, int index, struct LinkList *head) {
+  return (long)item == 2;
+}
+
+bool testLinkListFind() {
+  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, ENDARG);
+  struct LinkList *result = LinkListFind(head, __testLinkListFind);
+  bool flag = result != head && result == head->next;
+  LinkListFree(&head);
+  return flag;
+}
+
 int main()
 {
   HLIB_ASSERT_TEST(testLinkListUnshift);
@@ -94,4 +106,5 @@ int main()
   HLIB_ASSERT_TEST(testLinkListGetter);
   HLIB_ASSERT_TEST(testLinkListCopyHead);
   HLIB_ASSERT_TEST(testLinkListConcat);
+  HLIB_ASSERT_TEST(testLinkListFind);
 }
