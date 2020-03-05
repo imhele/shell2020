@@ -1,5 +1,6 @@
 #ifndef __HLIB_UTILS_HELPERS_ASSERT
 #define __HLIB_UTILS_HELPERS_ASSERT
+
 #include "../exceptions.h"
 #include "../pretty/color.h"
 #include "./try.h"

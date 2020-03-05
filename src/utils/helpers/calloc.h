@@ -1,5 +1,6 @@
 #ifndef __HLIB_UTILS_HELPERS_CALLOC
 #define __HLIB_UTILS_HELPERS_CALLOC
+
 #include <stdlib.h>
 
 #define HLIB_MALLOC(type) ((type *)malloc(sizeof(type)))

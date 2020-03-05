@@ -1,5 +1,6 @@
 #ifndef __HLIB_UTILS_PRETTY_COLORS
 #define __HLIB_UTILS_PRETTY_COLORS
+
 #include <stdio.h>
 
 #define ColorDefault "0"
@@ -45,7 +46,10 @@
 #define BCWh BGColorWhite
 #endif /* __HLIB_UTILS_PRETTY_COLOR_ALIAS */
 
-#define color_string(str, bg_color, text_color) "\033[" text_color ";" bg_color "m" str "\033[0m"
-#define printf_color_str(str, bg_color, text_color) printf(color_string(str, bg_color, text_color))
+#define color_string(str, bg_color, text_color) \
+  "\033[" text_color ";" bg_color "m" str "\033[0m"
+
+#define printf_color_str(str, bg_color, text_color) \
+  printf(color_string(str, bg_color, text_color) "\n")
 
 #endif /* __HLIB_UTILS_PRETTY_COLORS */
