@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../helpers/calloc.h"
+#include "../helpers/endarg.h"
 
 struct LinkList
 {
@@ -21,7 +22,7 @@ struct LinkList *LinkListUnshift(struct LinkList *head, ...)
   struct LinkList *new_head = HLIB_CALLOC(struct LinkList);
 
   va_start(argv, head);
-  for (prev = new_head; (value = va_arg(argv, void *)) != NULL; prev = curr)
+  for (prev = new_head; (value = va_arg(argv, void *)) != ENDARG; prev = curr)
     (prev->next = curr = HLIB_CALLOC(struct LinkList))->value = value;
   va_end(argv);
 
@@ -76,7 +77,7 @@ struct LinkList *LinkListPush(struct LinkList *head, ...)
   struct LinkList *curr;
   void *value = va_arg(argv, void *);
 
-  if (value == NULL)
+  if (value == ENDARG)
     return head;
 
   if (head == NULL)
@@ -88,7 +89,7 @@ struct LinkList *LinkListPush(struct LinkList *head, ...)
     curr = curr->next = HLIB_CALLOC(struct LinkList);
   }
 
-  for (curr->value = value; (value = va_arg(argv, void *)) != NULL; curr->value = value)
+  for (curr->value = value; (value = va_arg(argv, void *)) != ENDARG; curr->value = value)
     curr = curr->next = HLIB_CALLOC(struct LinkList);
   va_end(argv);
 

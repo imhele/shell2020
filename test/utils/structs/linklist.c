@@ -2,8 +2,8 @@
 
 bool testLinkListUnshift()
 {
-  struct LinkList *head = LinkListUnshift(NULL, 2, NULL);
-  head = LinkListUnshift(head, 1, NULL);
+  struct LinkList *head = LinkListUnshift(NULL, 2, ENDARG);
+  head = LinkListUnshift(head, 1, ENDARG);
   bool flag = (long)head->value == 1 && (long)head->next->value == 2;
   LinkListFree(&head);
   return flag;
@@ -11,15 +11,15 @@ bool testLinkListUnshift()
 
 bool testLinkListFree()
 {
-  struct LinkList *head = LinkListUnshift(NULL, 1, 2, NULL);
+  struct LinkList *head = LinkListUnshift(NULL, 1, 2, ENDARG);
   LinkListFree(&head);
   return head == NULL;
 }
 
 bool testLinkListPush()
 {
-  struct LinkList *head = LinkListPush(NULL, 1, 2, NULL);
-  head = LinkListPush(head, 3, NULL);
+  struct LinkList *head = LinkListPush(NULL, 1, 2, ENDARG);
+  head = LinkListPush(head, 3, ENDARG);
   bool flag = (long)LinkListGetter(head, 0) == 1 && (long)LinkListGetter(head, 2) == 3;
   LinkListFree(&head);
   return flag;
@@ -27,7 +27,7 @@ bool testLinkListPush()
 
 bool testLinkListLength()
 {
-  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, NULL);
+  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, ENDARG);
   bool flag = LinkListLength(head) == 3;
   LinkListFree(&head);
   return flag;
@@ -37,7 +37,7 @@ bool testLinkListSlice()
 {
   bool flag = true;
   struct LinkList *new_head;
-  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, 4, NULL);
+  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, 4, ENDARG);
 
   new_head = LinkListSlice(head, 0, 3);
   flag = flag && new_head != head;
@@ -57,7 +57,7 @@ bool testLinkListSlice()
 
 bool testLinkListGetter()
 {
-  struct LinkList *head = LinkListUnshift(NULL, 3, 4, 5, NULL);
+  struct LinkList *head = LinkListUnshift(NULL, 3, 4, 5, ENDARG);
   bool flag = (long)LinkListGetter(head, 0) == 3 && (long)LinkListGetter(head, 2) == 5;
   LinkListFree(&head);
   return flag;
