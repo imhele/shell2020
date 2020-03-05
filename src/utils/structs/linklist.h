@@ -4,6 +4,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <limits.h>
 #include "../helpers/calloc.h"
 #include "../helpers/endarg.h"
 
@@ -48,6 +49,16 @@ void LinkListFree(struct LinkList **head)
   }
 
   *head = NULL;
+}
+
+void LinkListFreeN(struct LinkList **head, ...)
+{
+  va_list argv;
+  LinkListFree(head);
+  va_start(argv, head);
+  while ((head = va_arg(argv, struct LinkList **)) != ENDARG)
+    LinkListFree(head);
+  va_end(argv);
 }
 
 void LinkListFreeValue(struct LinkList **head)
@@ -143,6 +154,43 @@ void *LinkListGetter(struct LinkList *head, int index)
   while (head != NULL && index--)
     head = head->next;
   return head ? head->value : NULL;
+}
+
+struct LinkList *LinkListCopyHead(struct LinkList *head)
+{
+  struct LinkList *new_head = HLIB_CALLOC(struct LinkList);
+  *new_head = *head;
+  return new_head;
+}
+
+struct LinkList *LinkListConcat(struct LinkList *head, ...)
+{
+  va_list argv;
+  struct LinkList *curr = head;
+  struct LinkList *new_head = head;
+
+  va_start(argv, head);
+  while (new_head == NULL && (curr = va_arg(argv, struct LinkList *)) != ENDARG)
+    new_head = curr;
+
+  if (new_head == NULL)
+    return new_head;
+
+  for (curr = new_head = LinkListCopyHead(curr); true;)
+  {
+    for (head = curr->next; head != NULL; head = head->next)
+      (curr = curr->next = HLIB_CALLOC(struct LinkList))->value = head->value;
+
+    head = va_arg(argv, struct LinkList *);
+    if (head == ENDARG)
+      break;
+    if (head == NULL)
+      continue;
+    curr = curr->next = LinkListCopyHead(head);
+  }
+  va_end(argv);
+
+  return new_head;
 }
 
 #endif /* __HLIB_UTILS_STRUCTS_LINKLIST */

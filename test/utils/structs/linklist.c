@@ -63,6 +63,27 @@ bool testLinkListGetter()
   return flag;
 }
 
+bool testLinkListCopyHead() {
+  struct LinkList *head = LinkListUnshift(NULL, 1, 2, ENDARG);
+  struct LinkList *copied = LinkListCopyHead(head);
+  bool flag = copied != head && copied->next == head->next;
+  LinkListFree(&head);
+  free(copied);
+  return flag;
+}
+
+bool testLinkListConcat() {
+  bool flag = true;
+  struct LinkList *a = LinkListPush(NULL, 1, 2, ENDARG);
+  struct LinkList *b = LinkListPush(NULL, 3, 4, ENDARG);
+  struct LinkList *concated = LinkListConcat(NULL, a, NULL, b, ENDARG);
+  flag = flag && LinkListLength(concated) == 4;
+  flag = flag && (long)LinkListGetter(concated, 0) == 1;
+  flag = flag && (long)LinkListGetter(concated, 3) == 4;
+  LinkListFreeN(&a, &b, &concated, ENDARG);
+  return flag;
+}
+
 int main()
 {
   HLIB_ASSERT_TEST(testLinkListUnshift);
@@ -71,4 +92,6 @@ int main()
   HLIB_ASSERT_TEST(testLinkListLength);
   HLIB_ASSERT_TEST(testLinkListSlice);
   HLIB_ASSERT_TEST(testLinkListGetter);
+  HLIB_ASSERT_TEST(testLinkListCopyHead);
+  HLIB_ASSERT_TEST(testLinkListConcat);
 }
