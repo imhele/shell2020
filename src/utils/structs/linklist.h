@@ -95,6 +95,46 @@ struct LinkList *LinkListPush(struct LinkList *head, ...)
   return head;
 }
 
+int LinkListLength(struct LinkList *head)
+{
+  int length = 0;
+  for (; head != NULL; length++)
+    head = head->next;
+  return length;
+}
+
+struct LinkList *LinkListSlice(struct LinkList *head, int start, int end)
+{
+  struct LinkList *curr;
+  struct LinkList *new_head = NULL;
+
+  if (start < 0 && end < 0 && start >= end)
+    return new_head;
+
+  if (start < 0 || end < 0)
+  {
+    int length = LinkListLength(head);
+    start += start < 0 ? length : 0, end += end < 0 ? length : 0;
+    start = start < 0 ? 0 : start, end = end < 0 ? 0 : end;
+  }
+
+  if (start >= end)
+    return new_head;
+
+  int count = end - start;
+
+  while (start-- && head != NULL)
+    head = head->next;
+
+  for (curr = new_head = HLIB_CALLOC(struct LinkList); head != NULL && count--; head = head->next)
+    (curr = curr->next = HLIB_CALLOC(struct LinkList))->value = head->value;
+
+  head = new_head->next;
+  free(new_head);
+
+  return head;
+}
+
 void *LinkListGetter(struct LinkList *head, int index)
 {
   if (index < 0)
