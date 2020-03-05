@@ -45,7 +45,7 @@ function buildIndexRecursively(directory, extname = '.h', entry = directory) {
   const relativeIncludesSet = new Set(relativeIncludes);
   relativeIncludesSet.delete('');
 
-  const includes = Array.from(relativeIncludes).reduce((prev, relativePath) => {
+  const includes = Array.from(relativeIncludesSet).reduce((prev, relativePath) => {
     return relativePath ? prev.concat('#include "', relativePath, '"\n') : prev;
   }, '\n');
 
