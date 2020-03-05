@@ -39,7 +39,7 @@ void LinkListFree(struct LinkList **head)
 
   struct LinkList *next;
   struct LinkList *curr = *head;
-  while (curr)
+  while (curr != NULL)
   {
     next = curr->next;
     free(curr);
@@ -49,11 +49,57 @@ void LinkListFree(struct LinkList **head)
   *head = NULL;
 }
 
+void LinkListFreeValue(struct LinkList **head)
+{
+  if (head == NULL || *head == NULL)
+    return;
+
+  struct LinkList *next;
+  struct LinkList *curr = *head;
+  while (curr != NULL)
+  {
+    next = curr->next;
+    if (curr->value != NULL)
+      free(curr->value);
+    free(curr);
+    curr = next;
+  }
+
+  *head = NULL;
+}
+
+struct LinkList *LinkListPush(struct LinkList *head, ...)
+{
+  va_list argv;
+  va_start(argv, head);
+
+  struct LinkList *curr;
+  void *value = va_arg(argv, void *);
+
+  if (value == NULL)
+    return head;
+
+  if (head == NULL)
+    curr = head = HLIB_CALLOC(struct LinkList);
+  else
+  {
+    while (curr->next != NULL)
+      curr = curr->next;
+    curr = curr->next = HLIB_CALLOC(struct LinkList);
+  }
+
+  for (curr->value = value; (value = va_arg(argv, void *)) != NULL; curr->value = value)
+    curr = curr->next = HLIB_CALLOC(struct LinkList);
+  va_end(argv);
+
+  return head;
+}
+
 void *LinkListGetter(struct LinkList *head, int index)
 {
   if (index < 0)
     return NULL;
-  while (head && index--)
+  while (head != NULL && index--)
     head = head->next;
   return head ? head->value : NULL;
 }
