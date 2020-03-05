@@ -197,7 +197,6 @@ struct LinkList *LinkListConcat(struct LinkList *head, ...)
 struct LinkList *LinkListFind(
     struct LinkList *head, bool (*find)(void *item, int index, struct LinkList *head))
 {
-
   for (int index = 0; head != NULL; index++, head = head->next)
     if (find(head->value, index, head))
       return head;
