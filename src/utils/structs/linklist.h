@@ -62,6 +62,26 @@ void LinkListFreeN(struct LinkList **head, ...)
   va_end(argv);
 }
 
+void LinkListFreeEach(
+  struct LinkList **head, void (*callback)(void *value, int index, struct LinkList *curr))
+{
+  if (head == NULL || *head == NULL)
+    return;
+
+  struct LinkList *next;
+  struct LinkList *curr = *head;
+
+  for (int index = 0; curr != NULL; index++)
+  {
+    next = curr->next;
+    callback(curr->value, index, curr);
+    free(curr);
+    curr = next;
+  }
+
+  *head = NULL;
+}
+
 void LinkListFreeValue(struct LinkList **head)
 {
   if (head == NULL || *head == NULL)
