@@ -14,12 +14,12 @@ struct MapItem
 };
 
 /**
- * @return the head of map is always an empty node.
+ * @return the head of map is always an empty node, or stores meta data.
  **/
-struct Map *MapCreate()
+struct Map *MapCreate(void *meta)
 {
   struct Map *map = HLIB_CALLOC(struct Map);
-  map->value = NULL, map->next = NULL;
+  map->value = meta, map->next = NULL;
   return map;
 }
 
