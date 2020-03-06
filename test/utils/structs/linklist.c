@@ -55,6 +55,14 @@ bool testLinkListSlice()
   return flag;
 }
 
+bool testLinkListLocate()
+{
+  struct LinkList *head = LinkListUnshift(NULL, 3, 4, 5, ENDARG);
+  bool flag = LinkListLocate(head, 2) == head->next->next;
+  LinkListFree(&head);
+  return flag;
+}
+
 bool testLinkListGetter()
 {
   struct LinkList *head = LinkListUnshift(NULL, 3, 4, 5, ENDARG);
@@ -63,7 +71,8 @@ bool testLinkListGetter()
   return flag;
 }
 
-bool testLinkListCopyHead() {
+bool testLinkListCopyHead()
+{
   struct LinkList *head = LinkListUnshift(NULL, 1, 2, ENDARG);
   struct LinkList *copied = LinkListCopyHead(head);
   bool flag = copied != head && copied->next == head->next;
@@ -72,7 +81,8 @@ bool testLinkListCopyHead() {
   return flag;
 }
 
-bool testLinkListConcat() {
+bool testLinkListConcat()
+{
   bool flag = true;
   struct LinkList *a = LinkListPush(NULL, 1, 2, ENDARG);
   struct LinkList *b = LinkListPush(NULL, 3, 4, ENDARG);
@@ -84,14 +94,56 @@ bool testLinkListConcat() {
   return flag;
 }
 
-bool __testLinkListFind(void *item, int index, struct LinkList *head) {
-  return (long)item == 2;
+bool __testLinkListFind(void *value, int index, struct LinkList *head)
+{
+  return (long)value == 2;
 }
 
-bool testLinkListFind() {
+bool testLinkListFind()
+{
   struct LinkList *head = LinkListPush(NULL, 1, 2, 3, ENDARG);
   struct LinkList *result = LinkListFind(head, __testLinkListFind);
   bool flag = result != head && result == head->next;
+  LinkListFree(&head);
+  return flag;
+}
+
+bool testLinkListSome()
+{
+  bool flag = true;
+  struct LinkList *head_a = LinkListPush(NULL, 1, 2, 3, ENDARG);
+  struct LinkList *head_b = LinkListPush(NULL, 4, 5, 6, ENDARG);
+  flag = flag && LinkListSome(head_a, __testLinkListFind);
+  flag = flag && !LinkListSome(head_b, __testLinkListFind);
+  LinkListFreeN(&head_a, &head_b, ENDARG);
+  return flag;
+}
+
+void *__testLinkListMap(void *value, int index, struct LinkList *head)
+{
+  return (void *)((long)value - 1);
+}
+
+bool testLinkListMap()
+{
+  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, ENDARG);
+  struct LinkList *result = LinkListMap(head, __testLinkListMap);
+  bool flag = result != head && (long)LinkListGetter(result, 2) == 2;
+  LinkListFree(&head);
+  LinkListFree(&result);
+  return flag;
+}
+
+void __testLinkListForeach(void *value, int index, struct LinkList *head)
+{
+  LinkListLocate(head, index)->value = value - 1;
+}
+
+bool testLinkListForeach()
+{
+  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, ENDARG);
+  LinkListForeach(head, __testLinkListForeach);
+  bool flag = (long)LinkListGetter(head, 2) == 2;
   LinkListFree(&head);
   return flag;
 }
@@ -103,8 +155,12 @@ int main()
   HLIB_ASSERT_TEST(testLinkListPush);
   HLIB_ASSERT_TEST(testLinkListLength);
   HLIB_ASSERT_TEST(testLinkListSlice);
+  HLIB_ASSERT_TEST(testLinkListLocate);
   HLIB_ASSERT_TEST(testLinkListGetter);
   HLIB_ASSERT_TEST(testLinkListCopyHead);
   HLIB_ASSERT_TEST(testLinkListConcat);
   HLIB_ASSERT_TEST(testLinkListFind);
+  HLIB_ASSERT_TEST(testLinkListSome);
+  HLIB_ASSERT_TEST(testLinkListMap);
+  HLIB_ASSERT_TEST(testLinkListForeach);
 }

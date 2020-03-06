@@ -148,13 +148,21 @@ struct LinkList *LinkListSlice(struct LinkList *head, int start, int end)
   return head;
 }
 
-void *LinkListGetter(struct LinkList *head, int index)
+struct LinkList *LinkListLocate(struct LinkList *head, int index)
 {
   if (index < 0)
     return NULL;
+
   while (head != NULL && index--)
     head = head->next;
-  return head ? head->value : NULL;
+
+  return head;
+}
+
+void *LinkListGetter(struct LinkList *head, int index)
+{
+  head = LinkListLocate(head, index);
+  return head == NULL ? NULL : head->value;
 }
 
 struct LinkList *LinkListCopyHead(struct LinkList *head)
@@ -195,12 +203,57 @@ struct LinkList *LinkListConcat(struct LinkList *head, ...)
 }
 
 struct LinkList *LinkListFind(
-    struct LinkList *head, bool (*find)(void *item, int index, struct LinkList *head))
+    struct LinkList *head, bool (*find)(void *value, int index, struct LinkList *head))
 {
-  for (int index = 0; head != NULL; index++, head = head->next)
-    if (find(head->value, index, head))
-      return head;
+  struct LinkList *curr = head;
+
+  for (int index = 0; curr != NULL; index++, curr = curr->next)
+    if (find(curr->value, index, head))
+      return curr;
+
   return NULL;
+}
+
+bool LinkListSome(
+    struct LinkList *head, bool (*find)(void *value, int index, struct LinkList *head))
+{
+  struct LinkList *curr = head;
+
+  for (int index = 0; curr != NULL; index++, curr = curr->next)
+    if (find(curr->value, index, head))
+      return true;
+
+  return false;
+}
+
+struct LinkList *LinkListMap(
+    struct LinkList *head, void *(*mapping)(void *value, int index, struct LinkList *head))
+{
+  if (head == NULL)
+    return NULL;
+
+  struct LinkList *curr_new = HLIB_CALLOC(struct LinkList);
+  struct LinkList *curr_old = head;
+  struct LinkList *new_head = curr_new;
+
+  for (int index = 0; true; index++)
+  {
+    curr_new->value = mapping(curr_old->value, index, head);
+    if ((curr_old = curr_old->next) == NULL)
+      break;
+    curr_new = curr_new->next = HLIB_CALLOC(struct LinkList);
+  }
+
+  return new_head;
+}
+
+void LinkListForeach(
+    struct LinkList *head, void (*callback)(void *value, int index, struct LinkList *head))
+{
+  struct LinkList *curr = head;
+
+  for (int index = 0; curr != NULL; index++, curr = curr->next)
+    callback(curr->value, index, head);
 }
 
 #endif /* __HLIB_UTILS_STRUCTS_LINKLIST */
