@@ -37,7 +37,7 @@ struct CommandMetaOptions *CommandMetaOptionsRegister(
 
 void CommandMetaOptionsFree(struct CommandMetaOptions **options);
 
-void __CommandMetaOptionFreeEach(void *value, int index, struct Map *curr)
+void __CommandMetaOptionFreeEach(void *value, void *key, struct Map *curr)
 {
   struct CommandMetaOption *option = (struct CommandMetaOption *)value;
   if (option != NULL && option->sub_options != NULL)
@@ -49,8 +49,8 @@ void CommandMetaOptionsFree(struct CommandMetaOptions **options)
   if (options == NULL || *options == NULL)
     return;
 
-  LinkListFreeEach(&((*options)->name), __CommandMetaOptionFreeEach);
-  LinkListFreeEach(&((*options)->alias), __CommandMetaOptionFreeEach);
+  MapFreeEach(&((*options)->name), __CommandMetaOptionFreeEach);
+  MapFreeEach(&((*options)->alias), __CommandMetaOptionFreeEach);
 
   *options = NULL;
 }

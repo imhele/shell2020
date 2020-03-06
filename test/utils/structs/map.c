@@ -1,34 +1,51 @@
 #include "../../../main.h"
 
-struct MapItem a = {(void *)1, (void *)10};
-struct MapItem b = {(void *)2, (void *)20};
-struct MapItem c = {(void *)1, (void *)30};
-
 bool testMapHas()
 {
-  struct LinkList *map = LinkListUnshift(NULL, &a, &b, ENDARG);
-  bool flag = MapHas(map, a.key, ENDARG) && MapHas(map, b.key, ENDARG);
-  LinkListFree(&map);
+  struct MapItem *a = HLIB_CALLOC(struct MapItem);
+  struct MapItem *b = HLIB_CALLOC(struct MapItem);
+  a->key = (void *)1, a->value = (void *)10;
+  b->key = (void *)2, b->value = (void *)20;
+  struct Map *map = LinkListPush(MapCreate(), a, b, ENDARG);
+
+  bool flag = MapHas(map, a->key, ENDARG) && MapHas(map, b->key, ENDARG);
+  MapFree(&map);
   return flag;
 }
 
 bool testMapGet()
 {
-  struct LinkList *map = LinkListUnshift(NULL, &a, &b, ENDARG);
-  bool flag = MapGet(map, a.key, ENDARG)->value == a.value;
-  LinkListFree(&map);
+  struct MapItem *a = HLIB_CALLOC(struct MapItem);
+  struct MapItem *b = HLIB_CALLOC(struct MapItem);
+  a->key = (void *)1, a->value = (void *)10;
+  b->key = (void *)2, b->value = (void *)20;
+  struct Map *map = LinkListPush(MapCreate(), a, b, ENDARG);
+
+  bool flag = MapGet(map, a->key, ENDARG)->value == a->value;
+  MapFree(&map);
   return flag;
 }
 
 bool testMapSet()
 {
+  bool flag = true;
+  struct Map *map = MapCreate();
+  MapSet(map, (void *)1, (void *)10, ENDARG);
 
-  struct LinkList *map = LinkListUnshift(NULL, &a, &b, ENDARG);
-  bool flag = MapGet(map, a.key, ENDARG)->value == a.value;
-  map = MapSet(map, c.key, c.value, ENDARG);
-  flag = flag && MapGet(map, a.key, ENDARG)->value == c.value;
-  LinkListFree(&map);
+  flag = flag && MapGet(map, (void *)1, ENDARG)->value == (void *)10;
+  void *deleted_value = MapSet(map, (void *)1, (void *)20, ENDARG);
+  flag = flag && deleted_value == (void *)10;
+  flag = flag && MapGet(map, (void *)1, ENDARG)->value == (void *)20;
+  MapFree(&map);
   return flag;
+}
+
+bool testMapFree()
+{
+  struct MapItem *item = HLIB_CALLOC(struct MapItem);
+  struct Map *map = LinkListPush(MapCreate(), item, ENDARG);
+  MapFree(&map);
+  return map == NULL;
 }
 
 int main()
@@ -36,4 +53,5 @@ int main()
   HLIB_ASSERT_TEST(testMapHas);
   HLIB_ASSERT_TEST(testMapGet);
   HLIB_ASSERT_TEST(testMapSet);
+  HLIB_ASSERT_TEST(testMapFree);
 }

@@ -106,7 +106,7 @@ struct LinkList *LinkListPush(struct LinkList *head, ...)
   va_list argv;
   va_start(argv, head);
 
-  struct LinkList *curr;
+  struct LinkList *curr = head;
   void *value = va_arg(argv, void *);
 
   if (value == ENDARG)
