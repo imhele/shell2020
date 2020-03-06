@@ -1,7 +1,7 @@
 #ifndef __HLIB_UTILS_SYMBOLS
 #define __HLIB_UTILS_SYMBOLS
 
-const void *ENDARG = (void *)&"";
-const void *DEFAULTARG = (void *)&"";
+const void *ENDARG = (void *)&"WELLKNOWN_SYMBOL_ENDARG";
+const void *DEFAULTARG = (void *)&"WELLKNOWN_SYMBOL_DEFAULTARG";
 
 #endif /* __HLIB_UTILS_SYMBOLS */
