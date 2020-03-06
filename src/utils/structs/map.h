@@ -5,6 +5,8 @@
 #include "./bool.h"
 #include "./linklist.h"
 
+#define Map LinkList
+
 struct MapItem
 {
   void *key;
@@ -16,8 +18,7 @@ bool __MapDefaultIsKeyEqual(void *a, void *b)
   return a == b;
 }
 
-struct MapItem *MapGet(
-    struct LinkList *head, void *key, bool (*isKeyEqual)(void *a, void *b))
+struct MapItem *MapGet(struct Map *head, void *key, bool (*isKeyEqual)(void *a, void *b))
 {
   if (isKeyEqual == ENDARG)
     isKeyEqual = __MapDefaultIsKeyEqual;
@@ -27,15 +28,13 @@ struct MapItem *MapGet(
   return NULL;
 }
 
-bool MapHas(
-    struct LinkList *head, void *key, bool (*isKeyEqual)(void *a, void *b))
+bool MapHas(struct Map *head, void *key, bool (*isKeyEqual)(void *a, void *b))
 {
   head = (void *)MapGet(head, key, isKeyEqual);
   return head != NULL;
 }
 
-struct LinkList *MapSet(
-    struct LinkList *head, void *key, void *value, bool (*isKeyEqual)(void *a, void *b))
+struct Map *MapSet(struct Map *head, void *key, void *value, bool (*isKeyEqual)(void *a, void *b))
 {
   struct MapItem *exists = MapGet(head, key, isKeyEqual);
   if (exists == NULL)
