@@ -1,7 +1,6 @@
 #ifndef __HLIB_UTILS_STRUCTS_CLOSURE
 #define __HLIB_UTILS_STRUCTS_CLOSURE
 
-#include <limits.h>
 #include "../structs/map.h"
 
 struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
@@ -11,10 +10,12 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
   {             \
     __CLOSURE_VARIABLE_MAPS = LinkListUnshift(__CLOSURE_VARIABLE_MAPS, MapCreate(NULL), ENDARG);
 
-#define ENDCLOSURE                                           \
-  MapFree((struct Map **)&(__CLOSURE_VARIABLE_MAPS->value)); \
-  __CLOSURE_VARIABLE_MAPS = __CLOSURE_VARIABLE_MAPS->next;   \
-  }                                                          \
+#define ENDCLOSURE                                                               \
+  MapFree((struct Map **)&(__CLOSURE_VARIABLE_MAPS->value));                     \
+  struct LinkList *__CLOSURE_VARIABLE_NEXT_MAPS = __CLOSURE_VARIABLE_MAPS->next; \
+  free(__CLOSURE_VARIABLE_MAPS);                                                 \
+  __CLOSURE_VARIABLE_MAPS = __CLOSURE_VARIABLE_NEXT_MAPS;                        \
+  }                                                                              \
   while (0)
 
 #define useClosure(variable) \
