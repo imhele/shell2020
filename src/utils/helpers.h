@@ -3,6 +3,7 @@
 
 #include "helpers/assert.h"
 #include "helpers/calloc.h"
+#include "helpers/closure.h"
 #include "helpers/try.h"
 
 #endif /* __HLIB_UTILS_HELPERS */

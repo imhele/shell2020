@@ -1,6 +1,7 @@
 #ifndef __HLIB_UTILS_STRUCTS_MAP
 #define __HLIB_UTILS_STRUCTS_MAP
 
+#include <string.h>
 #include "../symbols.h"
 #include "./bool.h"
 #include "./linklist.h"
@@ -26,6 +27,11 @@ struct Map *MapCreate(void *meta)
 bool __MapDefaultIsKeyEqual(void *a, void *b)
 {
   return a == b;
+}
+
+bool MapIsStringKeyEqual(void *a, void *b)
+{
+  return !strcmp((char *)a, (char *)b);
 }
 
 struct MapItem *MapGet(struct Map *head, void *key, bool (*isKeyEqual)(void *a, void *b))
