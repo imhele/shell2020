@@ -1,7 +1,7 @@
 #ifndef __HLIB_UTILS_STRUCTS_MAP
 #define __HLIB_UTILS_STRUCTS_MAP
 
-#include "../helpers/endarg.h"
+#include "../symbols.h"
 #include "./bool.h"
 #include "./linklist.h"
 
@@ -30,7 +30,7 @@ bool __MapDefaultIsKeyEqual(void *a, void *b)
 
 struct MapItem *MapGet(struct Map *head, void *key, bool (*isKeyEqual)(void *a, void *b))
 {
-  if (isKeyEqual == ENDARG)
+  if (isKeyEqual == DEFAULTARG)
     isKeyEqual = __MapDefaultIsKeyEqual;
   while ((head = head->next) != NULL)
     if (isKeyEqual(((struct MapItem *)(head->value))->key, key))

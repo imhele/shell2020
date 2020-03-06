@@ -8,7 +8,7 @@ bool testMapHas()
   b->key = (void *)2, b->value = (void *)20;
   struct Map *map = LinkListPush(MapCreate(), a, b, ENDARG);
 
-  bool flag = MapHas(map, a->key, ENDARG) && MapHas(map, b->key, ENDARG);
+  bool flag = MapHas(map, a->key, DEFAULTARG) && MapHas(map, b->key, DEFAULTARG);
   MapFree(&map);
   return flag;
 }
@@ -21,7 +21,7 @@ bool testMapGet()
   b->key = (void *)2, b->value = (void *)20;
   struct Map *map = LinkListPush(MapCreate(), a, b, ENDARG);
 
-  bool flag = MapGet(map, a->key, ENDARG)->value == a->value;
+  bool flag = MapGet(map, a->key, DEFAULTARG)->value == a->value;
   MapFree(&map);
   return flag;
 }
@@ -30,12 +30,12 @@ bool testMapSet()
 {
   bool flag = true;
   struct Map *map = MapCreate();
-  MapSet(map, (void *)1, (void *)10, ENDARG);
+  MapSet(map, (void *)1, (void *)10, DEFAULTARG);
 
-  flag = flag && MapGet(map, (void *)1, ENDARG)->value == (void *)10;
-  void *deleted_value = MapSet(map, (void *)1, (void *)20, ENDARG);
+  flag = flag && MapGet(map, (void *)1, DEFAULTARG)->value == (void *)10;
+  void *deleted_value = MapSet(map, (void *)1, (void *)20, DEFAULTARG);
   flag = flag && deleted_value == (void *)10;
-  flag = flag && MapGet(map, (void *)1, ENDARG)->value == (void *)20;
+  flag = flag && MapGet(map, (void *)1, DEFAULTARG)->value == (void *)20;
   MapFree(&map);
   return flag;
 }

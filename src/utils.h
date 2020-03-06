@@ -5,5 +5,6 @@
 #include "utils/helpers.h"
 #include "utils/pretty.h"
 #include "utils/structs.h"
+#include "utils/symbols.h"
 
 #endif /* __HLIB_UTILS */

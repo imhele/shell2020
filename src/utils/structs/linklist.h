@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "../helpers/calloc.h"
-#include "../helpers/endarg.h"
+#include "../symbols.h"
 #include "./bool.h"
 
 struct LinkList
