@@ -55,4 +55,84 @@ void CommandMetaOptionsFree(struct CommandMetaOptions **options)
   *options = NULL;
 }
 
+struct LinkList *CommandMetaOptionToString(struct CommandMetaOptions *options, int wrap_level);
+
+void *__CommandMetaOptionReduceToString(void *memo, void *curr, int index, struct Map *head)
+{
+  if (curr == NULL)
+    return memo;
+
+  int wrap_level;
+  char *str = NULL;
+  struct LinkList *sub_strings;
+  struct LinkList *strings = (struct LinkList *)memo;
+  struct CommandMetaOption *option = (struct CommandMetaOption *)((struct MapItem *)curr)->value;
+
+  HLIB_STRCAT(str, "[");
+  useClosureValue(wrap_level);
+  sub_strings = CommandMetaOptionToString(option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0);
+
+  if (((struct MapItem *)curr)->key != NULL)
+    HLIB_STRCAT(str, "--"), HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
+
+  if (option->alias != NULL)
+    HLIB_STRCAT(str, " | -"), HLIB_STRCAT(str, option->alias);
+
+  if (wrap_level <= 0)
+  {
+    if (strings == NULL)
+      strings = HLIB_CALLOC(struct LinkList);
+    else
+      HLIB_STRCAT(strings->value, " ");
+    HLIB_STRCAT(strings->value, str), free(str);
+    if (sub_strings != NULL)
+    {
+      HLIB_STRCAT(strings->value, " ");
+      HLIB_STRCAT(strings->value, sub_strings->value);
+      free(sub_strings->value), LinkListFree(&sub_strings);
+    }
+    HLIB_STRCAT(strings->value, "]");
+    return strings;
+  }
+
+  if (sub_strings == NULL)
+  {
+    HLIB_STRCAT(str, "]");
+    return LinkListUnshift(strings, str, ENDARG);
+  }
+
+  if (wrap_level == 1)
+  {
+    HLIB_STRCAT(str, " ");
+    HLIB_STRCAT(str, sub_strings->value);
+    HLIB_STRCAT(str, "]");
+    free(sub_strings->value), LinkListFree(&sub_strings);
+    return LinkListUnshift(strings, str, ENDARG);
+  }
+
+  char *indent = HLIB_STRREPEAT(" ", strlen(str) + 1);
+  for (struct LinkList *curr = sub_strings; true; curr = curr->next)
+  {
+    HLIB_STRCAT(curr->value, indent);
+    if (curr->next == NULL)
+    {
+      free(indent);
+      curr->next = LinkListUnshift(strings, str, ENDARG);
+      return LinkListUnshift(sub_strings, HLIB_STRREPEAT("]", 1), ENDARG);
+    }
+  }
+}
+
+struct LinkList *CommandMetaOptionToString(struct CommandMetaOptions *options, int wrap_level)
+{
+  if (options == NULL)
+    return NULL;
+  struct LinkList *result;
+  CLOSURE
+  useClosure(wrap_level);
+  result = LinkListReduce(options->name->next, __CommandMetaOptionReduceToString, NULL);
+  ENDCLOSURE;
+  return result;
+}
+
 #endif /* __HLIB_COMMANDS_META_OPTIONS */
