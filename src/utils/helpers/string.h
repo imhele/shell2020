@@ -4,13 +4,16 @@
 #include <string.h>
 #include "calloc.h"
 
-#define HLIB_STRCAT(dest, src)                                                                  \
-  ({                                                                                            \
-    char *__HLIB_STRCAT_DEST = HLIB_CALLOC_N(char, strlen((char *)dest) + strlen((char *)src)); \
-    strcpy(__HLIB_STRCAT_DEST, (char *)dest);                                                   \
-    if (dest != NULL && ((char *)dest)[0] != '\0')                                              \
-      free((char *)dest);                                                                       \
-    dest = (typeof(dest))strcat(__HLIB_STRCAT_DEST, (char *)src);                               \
+#define HLIB_STRCAT(dest, src)                                                        \
+  ({                                                                                  \
+    unsigned long __HLIB_STRCAT_LEN = ((dest) == NULL ? 0 : strlen((char *)(dest))) + \
+                                      ((src) == NULL ? 0 : strlen((char *)(src)));    \
+    char *__HLIB_STRCAT_DEST = HLIB_CALLOC_N(char, __HLIB_STRCAT_LEN);                \
+    if ((dest) != NULL)                                                               \
+      strcpy(__HLIB_STRCAT_DEST, (char *)(dest)), free((char *)(dest));               \
+    if ((src) != NULL)                                                                \
+      strcat(__HLIB_STRCAT_DEST, (char *)(src));                                      \
+    (dest) = (typeof(dest))__HLIB_STRCAT_DEST;                                        \
   })
 
 char *HLIB_STRREPEAT(const char *str, int n)
