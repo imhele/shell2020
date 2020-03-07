@@ -3,8 +3,8 @@
 
 #include <string.h>
 #include "../symbols.h"
-#include "./bool.h"
-#include "./linklist.h"
+#include "bool.h"
+#include "linklist.h"
 
 #define Map LinkList
 

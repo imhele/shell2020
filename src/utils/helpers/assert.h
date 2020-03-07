@@ -4,7 +4,7 @@
 #include <assert.h>
 #include "../exceptions.h"
 #include "../pretty/color.h"
-#include "./try.h"
+#include "try.h"
 
 #ifdef NASSERT_THROW
 #define HLIB_ASSERT_THROW(ignore, message) ((void)0)
