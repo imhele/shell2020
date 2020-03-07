@@ -1,7 +1,8 @@
 #ifndef __HLIB_COMMANDS_META_OPTIONS
 #define __HLIB_COMMANDS_META_OPTIONS
 
-#include <string.h>
+#include "../../utils/helpers/closure.h"
+#include "../../utils/helpers/string.h"
 #include "../../utils/structs/map.h"
 
 struct CommandMetaOptions
@@ -12,25 +13,24 @@ struct CommandMetaOptions
 
 struct CommandMetaOption
 {
-  char *name;
   char *alias;
   char *description;
   struct CommandMetaOptions *sub_options;
 };
 
-bool __CommandMetaOptionIsNameOrAliasEqual(void *a, void *b)
-{
-  return !strcmp((char *)a, (char *)b);
-}
-
 struct CommandMetaOptions *CommandMetaOptionsRegister(
-    struct CommandMetaOptions *options, struct CommandMetaOption *option)
+    struct CommandMetaOptions *options, char *name, struct CommandMetaOption *detail)
 {
   if (options == NULL)
+  {
     options = HLIB_CALLOC(struct CommandMetaOptions);
+    options->name = MapCreate(NULL);
+    options->alias = MapCreate(NULL);
+  }
 
-  MapSet(options->name, option->name, option, __CommandMetaOptionIsNameOrAliasEqual);
-  MapSet(options->alias, option->alias, option, __CommandMetaOptionIsNameOrAliasEqual);
+  MapSet(options->name, name, detail, MapIsStringKeyEqual);
+  if (detail->alias != NULL)
+    MapSet(options->alias, detail->alias, detail, MapIsStringKeyEqual);
 
   return options;
 }

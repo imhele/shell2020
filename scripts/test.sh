@@ -18,4 +18,8 @@ test_directory() {
   done
 }
 
-test_directory ./test
+if test $# -le 0; then
+  test_directory ./test
+else
+  test_directory $1
+fi
