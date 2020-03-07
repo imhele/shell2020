@@ -148,6 +148,20 @@ bool testLinkListForeach()
   return flag;
 }
 
+void *__testLinkListReduce(void *memo, void *value, int index, struct LinkList *head)
+{
+  return (void *)((long)memo + (long)value);
+}
+
+bool testLinkListReduce()
+{
+  struct LinkList *head = LinkListPush(NULL, 1, 2, 3, ENDARG);
+  void *result = LinkListReduce(head, __testLinkListReduce, (void *)0);
+  bool flag = (long)result == 6;
+  LinkListFree(&head);
+  return flag;
+}
+
 int main()
 {
   HLIB_ASSERT_TEST(testLinkListUnshift);
@@ -163,4 +177,5 @@ int main()
   HLIB_ASSERT_TEST(testLinkListSome);
   HLIB_ASSERT_TEST(testLinkListMap);
   HLIB_ASSERT_TEST(testLinkListForeach);
+  HLIB_ASSERT_TEST(testLinkListReduce);
 }

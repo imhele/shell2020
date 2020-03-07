@@ -63,7 +63,7 @@ void LinkListFreeN(struct LinkList **head, ...)
 }
 
 void LinkListFreeEach(
-  struct LinkList **head, void (*callback)(void *value, int index, struct LinkList *curr))
+    struct LinkList **head, void (*callback)(void *value, int index, struct LinkList *curr))
 {
   if (head == NULL || *head == NULL)
     return;
@@ -274,6 +274,19 @@ void LinkListForeach(
 
   for (int index = 0; curr != NULL; index++, curr = curr->next)
     callback(curr->value, index, head);
+}
+
+void *LinkListReduce(
+    struct LinkList *head,
+    void *(*callback)(void *memo, void *value, int index, struct LinkList *head),
+    void *memo)
+{
+  struct LinkList *curr = head;
+
+  for (int index = 0; curr != NULL; index++, curr = curr->next)
+    memo = callback(memo, curr->value, index, head);
+
+  return memo;
 }
 
 #endif /* __HLIB_UTILS_STRUCTS_LINKLIST */
