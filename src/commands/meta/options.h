@@ -113,7 +113,7 @@ void *__CommandMetaOptionReduceToString(void *memo, void *curr, int index, struc
   char *indent = HLIB_STRREPEAT(" ", strlen(str) + 1);
   for (struct LinkList *curr = sub_strings; true; curr = curr->next)
   {
-    HLIB_STRCAT(curr->value, indent);
+    HLIB_STRCAT_LEFT(curr->value, indent);
     if (curr->next == NULL)
     {
       free(indent);
