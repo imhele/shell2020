@@ -1,6 +1,6 @@
 #include "../../main.h"
 
-const void *TEST = (void *)&"TEST";
+const void *TEST = &"TEST";
 
 bool testSymbolNotEqual()
 {
@@ -13,4 +13,5 @@ bool testSymbolNotEqual()
 int main()
 {
   HLIB_ASSERT_TEST(testSymbolNotEqual);
+  return 0;
 }

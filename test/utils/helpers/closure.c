@@ -57,4 +57,5 @@ int main()
 {
   HLIB_ASSERT_TEST(testClosure);
   HLIB_ASSERT_TEST(testMultiClosure);
+  return 0;
 }

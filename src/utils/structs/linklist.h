@@ -7,7 +7,7 @@
 #include <limits.h>
 #include "../helpers/calloc.h"
 #include "../symbols.h"
-#include "./bool.h"
+#include "bool.h"
 
 struct LinkList
 {
@@ -25,7 +25,10 @@ struct LinkList *LinkListUnshift(struct LinkList *head, ...)
 
   va_start(argv, head);
   for (prev = new_head; (value = va_arg(argv, void *)) != ENDARG; prev = curr)
-    (prev->next = curr = HLIB_CALLOC(struct LinkList))->value = value;
+  {
+    prev->next = curr = HLIB_CALLOC(struct LinkList);
+    curr->value = value, curr->next = NULL;
+  }
   va_end(argv);
 
   prev->next = head;
@@ -121,8 +124,11 @@ struct LinkList *LinkListPush(struct LinkList *head, ...)
     curr = curr->next = HLIB_CALLOC(struct LinkList);
   }
 
-  for (curr->value = value; (value = va_arg(argv, void *)) != ENDARG; curr->value = value)
+  for (curr->value = value, curr->next = NULL; (value = va_arg(argv, void *)) != ENDARG;)
+  {
     curr = curr->next = HLIB_CALLOC(struct LinkList);
+    curr->value = value, curr->next = NULL;
+  }
   va_end(argv);
 
   return head;

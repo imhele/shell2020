@@ -178,4 +178,5 @@ int main()
   HLIB_ASSERT_TEST(testLinkListMap);
   HLIB_ASSERT_TEST(testLinkListForeach);
   HLIB_ASSERT_TEST(testLinkListReduce);
+  return 0;
 }

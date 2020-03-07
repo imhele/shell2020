@@ -64,4 +64,5 @@ int main()
   HLIB_ASSERT_TEST(testMapGet);
   HLIB_ASSERT_TEST(testMapSet);
   HLIB_ASSERT_TEST(testMapFree);
+  return 0;
 }
