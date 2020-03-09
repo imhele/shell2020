@@ -3,6 +3,7 @@
 
 #include "utils/exceptions.h"
 #include "utils/helpers.h"
+#include "utils/path.h"
 #include "utils/pretty.h"
 #include "utils/structs.h"
 #include "utils/symbols.h"
