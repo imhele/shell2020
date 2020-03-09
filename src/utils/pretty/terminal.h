@@ -1,0 +1,51 @@
+#ifndef __HLIB_UTILS_PRETTY_TERMINAL
+#define __HLIB_UTILS_PRETTY_TERMINAL
+
+#include <stdio.h>
+
+#define TERMINAL_CDEFAULT "0"
+#define TERMINAL_CBLACK "30"
+#define TERMINAL_CRED "31"
+#define TERMINAL_CGREEN "32"
+#define TERMINAL_CBROWN "33"
+#define TERMINAL_CBLUE "34"
+#define TERMINAL_CPURPLE "35"
+#define TERMINAL_CCYAN "36"
+#define TERMINAL_CWHITE "37"
+
+#define TERMINAL_BCDEFAULT "0"
+#define TERMINAL_BCBLACK "40"
+#define TERMINAL_BCRED "41"
+#define TERMINAL_BCGREEN "42"
+#define TERMINAL_BCBROWN "43"
+#define TERMINAL_BCBLUE "44"
+#define TERMINAL_BCPURPLE "45"
+#define TERMINAL_BCCYAN "46"
+#define TERMINAL_BCWHITE "47"
+
+#define TERMINAL_DEFAULT "0"
+#define TERMINAL_HIGHLIGHT "1"
+#define TERMINAL_UNDERLINE "4"
+#define TERMINAL_FLASH "5"
+#define TERMINAL_REVERSE "7"
+#define TERMINAL_HIDDEN "8"
+#define TERMINAL_CLEAN "2J"
+#define TERMINAL_CURSOR(x, y) x ";" y "H"
+#define TERMINAL_CURSOR_UP "1A"
+#define TERMINAL_CURSOR_DOWN "1B"
+#define TERMINAL_CURSOR_RIGHT "1C"
+#define TERMINAL_CURSOR_LEFT "1D"
+#define TERMINAL_CURSOR_UP_N(n) n "A"
+#define TERMINAL_CURSOR_DOWN_N(n) n "B"
+#define TERMINAL_CURSOR_RIGHT_N(n) n "C"
+#define TERMINAL_CURSOR_LEFT_N(n) n "D"
+
+#define HLIB_TERMINAL_CONFIG(config) "\033[" config
+
+#define HLIB_TERMINAL_STRING(str, config) "\033[" config "m" str "\033[0m"
+
+#define HLIB_TERMINAL_PRINTF(str, config) printf(HLIB_TERMINAL_STRING(str, config))
+
+#define HLIB_TERMINAL_PRINTF_ENDL(str, config) printf(HLIB_TERMINAL_STRING(str, config) "\n")
+
+#endif /* __HLIB_UTILS_PRETTY_TERMINAL */
