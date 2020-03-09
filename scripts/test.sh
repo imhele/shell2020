@@ -13,6 +13,9 @@ test_directory() {
   for dirent in $(find $1 -depth -type f -name "*.c"); do
     print_and_exec "gcc $dirent -o ./temp.o"
     ./temp.o
+    if [ $? -ne 0 ]; then
+      exit 1
+    fi
     rm ./temp.o
     echo
   done
