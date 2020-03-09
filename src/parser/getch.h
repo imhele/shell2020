@@ -4,7 +4,7 @@
 #include <assert.h>
 #include <stdlib.h>
 #include <termios.h>
-#include "../../utils/structs/bool.h"
+#include "../utils/structs/bool.h"
 
 struct termios __HLIB_OLD_TERMIOS;
 struct termios __HLIB_RAW_TERMIOS;

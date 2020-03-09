@@ -59,7 +59,7 @@ function buildIndexRecursively(directory, extname = '.h', entry = directory) {
     '#ifndef '.concat(macroName),
     '#define '.concat(macroName),
     includes,
-    '#endif /* '.concat(macroName, ' */'),
+    '#endif /* '.concat(macroName, ' */\n'),
   ].join('\n');
 
   fs.writeFileSync(absoluteIndexFile, indexContent, 'utf8');
