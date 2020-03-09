@@ -55,22 +55,22 @@ void CommandMetaOptionsFree(struct CommandMetaOptions **options)
   *options = NULL;
 }
 
-struct LinkList *CommandMetaOptionToString(struct CommandMetaOptions *options, int wrap_level);
+struct LinkList *CommandMetaOptionsToString(struct CommandMetaOptions *options, int wrap_level);
 
-void *__CommandMetaOptionReduceToString(void *memo, void *curr, int index, struct Map *head)
+void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, struct Map *head)
 {
   if (curr == NULL)
     return memo;
 
   int wrap_level;
   char *str = NULL;
-  struct LinkList *sub_strings;
   struct LinkList *strings = (struct LinkList *)memo;
   struct CommandMetaOption *option = (struct CommandMetaOption *)((struct MapItem *)curr)->value;
 
   HLIB_STRCAT(str, "[");
   useClosureValue(wrap_level);
-  sub_strings = CommandMetaOptionToString(option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0);
+  struct LinkList *sub_strings =
+      CommandMetaOptionsToString(option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0);
 
   if (((struct MapItem *)curr)->key != NULL)
     HLIB_STRCAT(str, "--"), HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
@@ -110,27 +110,25 @@ void *__CommandMetaOptionReduceToString(void *memo, void *curr, int index, struc
     return LinkListUnshift(strings, str, ENDARG);
   }
 
-  char *indent = HLIB_STRREPEAT(" ", strlen(str) + 1);
   for (struct LinkList *curr = sub_strings; true; curr = curr->next)
   {
-    HLIB_STRCAT_LEFT(curr->value, indent);
+    HLIB_STRCAT_LEFT(curr->value, "\t");
     if (curr->next == NULL)
     {
-      free(indent);
       curr->next = LinkListUnshift(strings, str, ENDARG);
       return LinkListUnshift(sub_strings, HLIB_STRREPEAT("]", 1), ENDARG);
     }
   }
 }
 
-struct LinkList *CommandMetaOptionToString(struct CommandMetaOptions *options, int wrap_level)
+struct LinkList *CommandMetaOptionsToString(struct CommandMetaOptions *options, int wrap_level)
 {
   if (options == NULL)
     return NULL;
   struct LinkList *result;
   CLOSURE
   useClosure(wrap_level);
-  result = LinkListReduce(options->name->next, __CommandMetaOptionReduceToString, NULL);
+  result = LinkListReduce(options->name->next, __CommandMetaOptionsReduceToString, NULL);
   ENDCLOSURE;
   return result;
 }
