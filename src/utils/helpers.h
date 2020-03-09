@@ -4,6 +4,7 @@
 #include "helpers/assert.h"
 #include "helpers/calloc.h"
 #include "helpers/closure.h"
+#include "helpers/file.h"
 #include "helpers/string.h"
 #include "helpers/try.h"
 
