@@ -34,7 +34,7 @@ function buildIndexRecursively(directory, extname = '.h', entry = directory) {
 
   /** @type {string[]} */
   const relativeIncludes = filesStats.map(({ stat, name }) => {
-    if (stat.isFile()) return path.join(basename, name);
+    if (stat.isFile() && name.endsWith(extname)) return path.join(basename, name);
     if (stat.isDirectory()) {
       buildIndexRecursively(path.join(directory, name), extname, entry);
       return path.join(basename, name).concat(extname);
