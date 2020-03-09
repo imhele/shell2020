@@ -67,7 +67,7 @@ void CommandMetaOptionsFree(struct CommandMetaOptions **options)
 }
 
 struct LinkList *CommandMetaOptionsToString(
-    struct CommandMetaOptions *options, int wrap_level, bool show_desc);
+    struct CommandMetaOptions *options, int wrap_level, bool show_desc, const void *display_config);
 
 void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, struct Map *head)
 {
@@ -77,26 +77,42 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
   int wrap_level;
   bool show_desc;
   char *str = NULL;
+  char *display_config;
   struct LinkList *strings = (struct LinkList *)memo;
   struct CommandMetaOption *option = (struct CommandMetaOption *)((struct MapItem *)curr)->value;
   char *prefix = __CommandMetaOptionToStringPrefix[option->type];
   char **bracket = __CommandMetaOptionToStringBracket[option->type];
 
-  HLIB_STRCAT(str, bracket[0]);
   useClosureValue(show_desc);
   useClosureValue(wrap_level);
+  useClosureValue(display_config);
   struct LinkList *sub_strings =
       CommandMetaOptionsToString(
-          option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0, show_desc);
+          option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0, show_desc, display_config);
 
   if (((struct MapItem *)curr)->key != NULL)
-    HLIB_STRCAT(str, prefix), HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
+  {
+    HLIB_STRCAT(str, prefix);
+    HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
+  }
 
   if (option->alias != NULL)
-    HLIB_STRCAT(str, " (-"), HLIB_STRCAT(str, option->alias), HLIB_STRCAT(str, ")");
+  {
+    HLIB_STRCAT(str, " (-");
+    HLIB_STRCAT(str, option->alias);
+    HLIB_STRCAT(str, ")");
+  }
 
   if (show_desc)
-    HLIB_STRCAT(str, ": "), HLIB_STRCAT(str, option->description);
+  {
+    HLIB_STRCAT_LEFT(str, "m");
+    HLIB_STRCAT_LEFT(str, display_config);
+    HLIB_STRCAT_LEFT(str, "\033[");
+    HLIB_STRCAT(str, "\033[0m: ");
+    HLIB_STRCAT(str, option->description);
+  }
+
+  HLIB_STRCAT_LEFT(str, bracket[0]);
 
   if (wrap_level <= 0)
   {
@@ -142,14 +158,17 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
 }
 
 struct LinkList *CommandMetaOptionsToString(
-    struct CommandMetaOptions *options, int wrap_level, bool show_desc)
+    struct CommandMetaOptions *options, int wrap_level, bool show_desc, const void *display_config)
 {
   if (options == NULL)
     return NULL;
+  if (display_config == DEFAULTARG)
+    display_config = "1;36";
   struct LinkList *result;
   CLOSURE
-  useClosure(wrap_level);
   useClosure(show_desc);
+  useClosure(wrap_level);
+  useClosure(display_config);
   result = LinkListReduce(options->name->next, __CommandMetaOptionsReduceToString, NULL);
   ENDCLOSURE;
   return result;
