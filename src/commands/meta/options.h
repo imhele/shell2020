@@ -55,7 +55,8 @@ void CommandMetaOptionsFree(struct CommandMetaOptions **options)
   *options = NULL;
 }
 
-struct LinkList *CommandMetaOptionsToString(struct CommandMetaOptions *options, int wrap_level);
+struct LinkList *CommandMetaOptionsToString(
+    struct CommandMetaOptions *options, int wrap_level, bool show_desc);
 
 void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, struct Map *head)
 {
@@ -63,20 +64,26 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
     return memo;
 
   int wrap_level;
+  bool show_desc;
   char *str = NULL;
   struct LinkList *strings = (struct LinkList *)memo;
   struct CommandMetaOption *option = (struct CommandMetaOption *)((struct MapItem *)curr)->value;
 
   HLIB_STRCAT(str, "[");
+  useClosureValue(show_desc);
   useClosureValue(wrap_level);
   struct LinkList *sub_strings =
-      CommandMetaOptionsToString(option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0);
+      CommandMetaOptionsToString(
+          option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0, show_desc);
 
   if (((struct MapItem *)curr)->key != NULL)
     HLIB_STRCAT(str, "--"), HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
 
   if (option->alias != NULL)
-    HLIB_STRCAT(str, " | -"), HLIB_STRCAT(str, option->alias);
+    HLIB_STRCAT(str, " (-"), HLIB_STRCAT(str, option->alias), HLIB_STRCAT(str, ")");
+
+  if (show_desc)
+    HLIB_STRCAT(str, ": "), HLIB_STRCAT(str, option->description);
 
   if (wrap_level <= 0)
   {
@@ -121,13 +128,15 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
   }
 }
 
-struct LinkList *CommandMetaOptionsToString(struct CommandMetaOptions *options, int wrap_level)
+struct LinkList *CommandMetaOptionsToString(
+    struct CommandMetaOptions *options, int wrap_level, bool show_desc)
 {
   if (options == NULL)
     return NULL;
   struct LinkList *result;
   CLOSURE
   useClosure(wrap_level);
+  useClosure(show_desc);
   result = LinkListReduce(options->name->next, __CommandMetaOptionsReduceToString, NULL);
   ENDCLOSURE;
   return result;
