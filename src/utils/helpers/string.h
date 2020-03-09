@@ -40,4 +40,26 @@ char *HLIB_STRREPEAT(const char *str, int n)
   return result;
 }
 
+char **HLIB_STRSPLIT(const char *str, const char delimiter)
+{
+  int count = 2;
+  int len = strlen(str);
+  char *copied_str = HLIB_CALLOC_N(char, len + 1);
+  strcpy(copied_str, str);
+  for (int i = 0; copied_str[i] != '\0'; i++)
+    if (copied_str[i] == delimiter)
+    {
+      count++;
+      copied_str[i] = '\0';
+    }
+  char **result = HLIB_CALLOC_N(char *, count);
+  for (int i = 0, j = 0; i < len; i++, j++)
+  {
+    result[j] = copied_str + i;
+    while (copied_str[i] != '\0')
+      i++;
+  }
+  return result;
+}
+
 #endif /* __HLIB_UTILS_HELPERS_STRING */
