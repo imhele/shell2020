@@ -38,10 +38,12 @@ bool testStrRepeat()
 bool testStrSplit()
 {
   bool flag = true;
-  char **array = HLIB_STRSPLIT("abc def ghi", ' ');
+  char **array = HLIB_STRSPLIT("abc def ghi ", ' ');
   flag = flag && !strcmp(*array, "abc");
   flag = flag && !strcmp(*(array + 1), "def");
   flag = flag && !strcmp(*(array + 2), "ghi");
+  flag = flag && !strcmp(*(array + 3), "");
+  flag = flag && *(array + 4) == NULL;
   free(*array), free(array);
   return flag;
 }
