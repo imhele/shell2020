@@ -6,10 +6,10 @@ bool testPathClean()
   bool flag = true;
 
   result = PathClean("/Users/../Users/./imhele///Desktop");
-  flag = flag && !strcmp(result, "/Users/imhele/Desktop/");
+  flag = flag && !strcmp(result, "/Users/imhele/Desktop");
   free(result);
 
-  result = PathClean("Users/../Users/./imhele///Desktop");
+  result = PathClean("Users/../Users/./imhele///Desktop/");
   flag = flag && !strcmp(result, "Users/imhele/Desktop/");
   free(result);
 
