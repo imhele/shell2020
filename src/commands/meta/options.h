@@ -5,6 +5,13 @@
 #include "../../utils/helpers/string.h"
 #include "../../utils/structs/map.h"
 
+enum CommandMetaOptionType
+{
+  CommandMetaOptionNormal,
+  CommandMetaOptionRequired,
+  CommandMetaOptionMultiple,
+};
+
 struct CommandMetaOptions
 {
   struct Map *name;
@@ -13,10 +20,14 @@ struct CommandMetaOptions
 
 struct CommandMetaOption
 {
+  short type;
   char *alias;
   char *description;
   struct CommandMetaOptions *sub_options;
 };
+
+char *__CommandMetaOptionToStringPrefix[3] = {"--", "", "..."};
+char *__CommandMetaOptionToStringBracket[3][2] = {{"[", "]"}, {"<", ">"}, {"<", ">"}};
 
 struct CommandMetaOptions *CommandMetaOptionsRegister(
     struct CommandMetaOptions *options, char *name, struct CommandMetaOption *detail)
@@ -68,8 +79,10 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
   char *str = NULL;
   struct LinkList *strings = (struct LinkList *)memo;
   struct CommandMetaOption *option = (struct CommandMetaOption *)((struct MapItem *)curr)->value;
+  char *prefix = __CommandMetaOptionToStringPrefix[option->type];
+  char **bracket = __CommandMetaOptionToStringBracket[option->type];
 
-  HLIB_STRCAT(str, "[");
+  HLIB_STRCAT(str, bracket[0]);
   useClosureValue(show_desc);
   useClosureValue(wrap_level);
   struct LinkList *sub_strings =
@@ -77,7 +90,7 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
           option->sub_options, wrap_level > 0 ? wrap_level - 1 : 0, show_desc);
 
   if (((struct MapItem *)curr)->key != NULL)
-    HLIB_STRCAT(str, "--"), HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
+    HLIB_STRCAT(str, prefix), HLIB_STRCAT(str, ((struct MapItem *)curr)->key);
 
   if (option->alias != NULL)
     HLIB_STRCAT(str, " (-"), HLIB_STRCAT(str, option->alias), HLIB_STRCAT(str, ")");
@@ -98,13 +111,13 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
       HLIB_STRCAT(strings->value, sub_strings->value);
       free(sub_strings->value), LinkListFree(&sub_strings);
     }
-    HLIB_STRCAT(strings->value, "]");
+    HLIB_STRCAT(strings->value, bracket[1]);
     return strings;
   }
 
   if (sub_strings == NULL)
   {
-    HLIB_STRCAT(str, "]");
+    HLIB_STRCAT(str, bracket[1]);
     return LinkListUnshift(strings, str, ENDARG);
   }
 
@@ -112,7 +125,7 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
   {
     HLIB_STRCAT(str, " ");
     HLIB_STRCAT(str, sub_strings->value);
-    HLIB_STRCAT(str, "]");
+    HLIB_STRCAT(str, bracket[1]);
     free(sub_strings->value), LinkListFree(&sub_strings);
     return LinkListUnshift(strings, str, ENDARG);
   }
@@ -123,7 +136,7 @@ void *__CommandMetaOptionsReduceToString(void *memo, void *curr, int index, stru
     if (curr->next == NULL)
     {
       curr->next = LinkListUnshift(strings, str, ENDARG);
-      return LinkListUnshift(sub_strings, HLIB_STRREPEAT("]", 1), ENDARG);
+      return LinkListUnshift(sub_strings, HLIB_STRREPEAT(bracket[1], 1), ENDARG);
     }
   }
 }
