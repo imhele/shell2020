@@ -6,12 +6,12 @@
 #include "_enum.h"
 
 PARSER_PIPELINE_STATUS ParserTypingExit(
-    struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix)
+    struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix, long hold_offset)
 {
   if (*(prefix->tail - 1) == 4)
     HLIB_TERMINAL_PRINTF_ENDL("\nexit", TERMINAL_HIGHLIGHT), exit(0);
 
-  if (*(prefix->tail - 1) == '\n')
+  if (*(prefix->tail - 1) == '\r')
     return PARSER_PIPELINE_STATUS_EXIT;
 
   return PARSER_PIPELINE_STATUS_PASS;
