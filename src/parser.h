@@ -3,7 +3,9 @@
 
 #include "parser/cwd.h"
 #include "parser/getch.h"
+#include "parser/getcursor.h"
 #include "parser/history.h"
+#include "parser/pipeline.h"
 #include "parser/ps1.h"
 #include "parser/typing.h"
 #include "parser/variable.h"
