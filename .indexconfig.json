@@ -1,0 +1,7 @@
+{
+  "root": "src",
+  "extname": ".h",
+  "entry": "main",
+  "macroprefix": "__HLIB",
+  "excludes": []
+}

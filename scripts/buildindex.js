@@ -1,18 +1,19 @@
 const fs = require('fs');
 const path = require('path');
 const Root = path.join(__dirname, '../');
+const config = require(path.join(Root, '.indexconfig.json'));
 const NodeGreaterThanXX = nodeGreaterThanXX();
 
-buildIndexRecursively('src');
+buildIndexRecursively(config.root);
 
 /**
  * @param {string} directory
  * @param {string} extname
  * @param {string} entry
  */
-function buildIndexRecursively(directory, extname = '.h', entry = directory) {
+function buildIndexRecursively(directory, extname = config.extname, entry = directory) {
   const basename = path.basename(directory);
-  const indexFile = (directory === entry ? 'main' : directory).concat(extname);
+  const indexFile = (directory === entry ? config.entry : directory).concat(extname);
   const absoluteIndexFile = path.join(Root, indexFile);
   const absoluteDirectory = path.join(Root, directory);
 
@@ -42,6 +43,10 @@ function buildIndexRecursively(directory, extname = '.h', entry = directory) {
     return '';
   });
 
+  if (config.excludes && config.excludes.some(pattern => new RegExp(pattern).test(indexFile))) {
+    return;
+  }
+
   const relativeIncludesSet = new Set(relativeIncludes);
   relativeIncludesSet.delete('');
 
@@ -53,7 +58,7 @@ function buildIndexRecursively(directory, extname = '.h', entry = directory) {
     .relative(entry, directory)
     .replace('/', '_')
     .toUpperCase();
-  const macroName = '__HLIB'.concat(identifier && '_', identifier);
+  const macroName = config.macroprefix.concat(identifier && '_', identifier);
 
   const indexContent = [
     '#ifndef '.concat(macroName),
