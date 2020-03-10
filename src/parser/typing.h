@@ -21,6 +21,8 @@ PARSER_PIPELINE __PARSER_PIPELINES[3] = {
 void ParserTyping()
 {
   int *cursor_coord;
+  int hold_offset = 0;
+  int quoted_flag = 0;
   char *ps1 = ParserPS1();
   PARSER_PIPELINE current_pipeline = NULL;
   PARSER_PIPELINE_STATUS status = PARSER_PIPELINE_STATUS_RESET;
@@ -34,9 +36,8 @@ void ParserTyping()
       current_pipeline = NULL;
       status = PARSER_PIPELINE_STATUS_PASS;
       printf(
-          "%s%s%s%s%s%s%s",
-          HLIB_TERMINAL_CONFIG(TERMINAL_CURSOR("0", "0")),
-          HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN_ALL),
+          "\r%s%s%s%s%s%s",
+          HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN),
           ps1,
           !prefix->head ? "" : (char *)prefix->head,
           HLIB_TERMINAL_CONFIG(TERMINAL_SAVE_CURSOR),
@@ -44,30 +45,46 @@ void ParserTyping()
           HLIB_TERMINAL_CONFIG(TERMINAL_RECOVER_CURSOR));
     }
 
-    if (!prefix->tail || !*prefix->tail)
+    if (!prefix->size || !*prefix->tail)
       ParserTypingBufferPushOne(prefix, ParserGetChar());
+    else
+      prefix->tail++;
 
-    if (status == PARSER_PIPELINE_STATUS_HOLD && current_pipeline != NULL)
+    if (*(prefix->tail - 1) == 39 || *(prefix->tail - 1) == 34)
+      quoted_flag = quoted_flag == *(prefix->tail - 1) ? 0 : *(prefix->tail - 1);
+
+    if (status == PARSER_PIPELINE_STATUS_HOLD)
     {
       status = current_pipeline(prefix, suffix);
+      if (status == PARSER_PIPELINE_STATUS_PASS)
+      {
+        current_pipeline = NULL;
+        if (prefix->tail - prefix->head > hold_offset)
+          prefix->tail = prefix->head + hold_offset;
+      }
     }
-
-    else if (status == PARSER_PIPELINE_STATUS_CATCH)
+    else if (!quoted_flag)
     {
-      current_pipeline = NULL;
-      status = PARSER_PIPELINE_STATUS_PASS;
-    }
-
-    else
-      for (int index = 0; __PARSER_PIPELINES[index] != NULL; index++)
+      for (
+          int index = 0;
+          status == PARSER_PIPELINE_STATUS_PASS && __PARSER_PIPELINES[index] != NULL;
+          index++)
       {
         status = __PARSER_PIPELINES[index](prefix, suffix);
-        if (status == PARSER_PIPELINE_STATUS_PASS)
-          continue;
         if (status == PARSER_PIPELINE_STATUS_HOLD)
+        {
+          hold_offset = prefix->tail - prefix->head;
           current_pipeline = __PARSER_PIPELINES[index];
-        break;
+        }
       }
+    }
+
+    if (status == PARSER_PIPELINE_STATUS_PASS)
+      printf("%c%s%s%s",
+             *(prefix->tail - 1),
+             HLIB_TERMINAL_CONFIG(TERMINAL_SAVE_CURSOR),
+             !suffix->head ? "" : (char *)suffix->head,
+             HLIB_TERMINAL_CONFIG(TERMINAL_RECOVER_CURSOR));
   }
 }
 
