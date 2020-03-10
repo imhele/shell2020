@@ -6,12 +6,13 @@
 #include "_enum.h"
 
 PARSER_PIPELINE_STATUS ParserTypingStartOfHeading(
-    struct ParserTypingBuffer **prefix, struct ParserTypingBuffer **suffix)
+    struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix)
 {
-  if (*((*prefix)->cursor) == 1)
+  if (*(prefix->tail - 1) == 1)
   {
-    *((*prefix)->cursor) = 0;
-    return PARSER_PIPELINE_STATUS_CATCH;
+    ParserTypingBufferUnshift(suffix, prefix->head, prefix->tail - prefix->head);
+    memset(prefix->tail = prefix->head, 0, prefix->size * sizeof(int));
+    return PARSER_PIPELINE_STATUS_RESET;
   }
 
   return PARSER_PIPELINE_STATUS_PASS;
