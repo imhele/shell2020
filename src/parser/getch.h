@@ -10,7 +10,7 @@ struct termios __HLIB_OLD_TERMIOS;
 struct termios __HLIB_RAW_TERMIOS;
 bool __HLIB_OLD_TERMIOS_FLAG = false;
 
-void getch_preset()
+void ParserGetCharPreset()
 {
   if (!__HLIB_OLD_TERMIOS_FLAG)
   {
@@ -22,7 +22,7 @@ void getch_preset()
   }
 }
 
-void getch_clean()
+void ParserGetCharClean()
 {
   if (__HLIB_OLD_TERMIOS_FLAG)
   {
@@ -31,11 +31,11 @@ void getch_clean()
   }
 }
 
-int getch(void)
+int ParserGetChar(void)
 {
-  getch_preset();
+  ParserGetCharPreset();
   int ch = getchar();
-  getch_clean();
+  ParserGetCharClean();
   return ch;
 }
 

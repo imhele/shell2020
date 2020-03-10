@@ -11,10 +11,10 @@ bool testParseInt()
   result = ParseInt(" 123");
   flag = flag && result == 123;
 
-  result = ParseInt("-123");
+  result = ParseInt("-123j ");
   flag = flag && result == -123;
 
-  result = ParseInt("+123");
+  result = ParseInt("+123x133");
   flag = flag && result == 123;
 
   return flag;
