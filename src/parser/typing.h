@@ -44,15 +44,15 @@ void ParserTyping()
           "\r%s%s%s%s%s%s",
           HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN),
           ps1,
-          (char *)prefix->head,
+          prefix->head,
           HLIB_TERMINAL_CONFIG(TERMINAL_SAVE_CURSOR),
-          (char *)suffix->head,
+          suffix->head,
           HLIB_TERMINAL_CONFIG(TERMINAL_RECOVER_CURSOR));
     }
 
     if (status == PARSER_PIPELINE_STATUS_PASS)
     {
-      if (current_pipeline >= 0)
+      if (current_pipeline >= 0 && hold_offset >= 0)
         if (prefix->tail - prefix->head > hold_offset)
           prefix->tail = prefix->head + hold_offset;
 
@@ -84,7 +84,7 @@ void ParserTyping()
         printf("%c%s%s%s",
                *(prefix->tail - 1),
                HLIB_TERMINAL_CONFIG(TERMINAL_SAVE_CURSOR),
-               (char *)suffix->head,
+               suffix->head,
                HLIB_TERMINAL_CONFIG(TERMINAL_RECOVER_CURSOR));
     }
     else if (status == PARSER_PIPELINE_STATUS_HOLD)
