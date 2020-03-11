@@ -9,7 +9,8 @@
 PARSER_PIPELINE_STATUS ParserTypingLeftRight(
     struct ParserTypingBuffer *prefix,
     struct ParserTypingBuffer *suffix,
-    unsigned int hold_offset)
+    unsigned int hold_offset,
+    char quoted_flag)
 {
   if (*(prefix->head + hold_offset - 1) == '\033')
   {

@@ -8,7 +8,8 @@
 PARSER_PIPELINE_STATUS ParserTypingExit(
     struct ParserTypingBuffer *prefix,
     struct ParserTypingBuffer *suffix,
-    unsigned int hold_offset)
+    unsigned int hold_offset,
+    char quoted_flag)
 {
   if (*(prefix->tail - 1) == 4)
     HLIB_TERMINAL_PRINTF_ENDL("\nexit", TERMINAL_HIGHLIGHT), exit(0);

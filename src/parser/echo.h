@@ -69,20 +69,25 @@ unsigned long *ParserEchoGetCursorOffset(unsigned long length, struct winsize wi
 
 void ParserEchoCleanFromHead(struct ParserTypingEchoMeta *echo_meta)
 {
-  unsigned long length =
-      echo_meta->ps1_length + echo_meta->prefix_length + echo_meta->suffix_length;
+  unsigned long curr_length = echo_meta->ps1_length + echo_meta->prefix_length;
+  unsigned long tail_length = curr_length + echo_meta->suffix_length;
 
-  if (!length)
+  if (!tail_length)
     return;
 
   struct winsize window;
   ioctl(STDOUT_FILENO, TIOCGWINSZ, &window);
-  unsigned long *offset = ParserEchoGetCursorOffset(length, window);
+  unsigned long *curr_offset = ParserEchoGetCursorOffset(curr_length, window);
+  unsigned long *tail_offset = ParserEchoGetCursorOffset(tail_length, window);
 
-  for (printf("\r%s", HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN)); (*offset)--;)
+  for (int down_line = *tail_offset - *curr_offset; down_line > 0; down_line--)
+    printf("%s", HLIB_TERMINAL_CONFIG(TERMINAL_CURSOR_DOWN));
+
+  for (printf("\r%s", HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN)); (*tail_offset)--;)
     printf("%s%s", HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN), HLIB_TERMINAL_CONFIG(TERMINAL_CURSOR_UP));
 
-  free(offset);
+  free(curr_offset);
+  free(tail_offset);
 }
 
 #endif /* __HLIB_PARSER_ECHO */

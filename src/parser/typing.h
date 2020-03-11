@@ -13,7 +13,8 @@
 typedef PARSER_PIPELINE_STATUS (*PARSER_PIPELINE)(
     struct ParserTypingBuffer *prefix,
     struct ParserTypingBuffer *suffix,
-    unsigned int hold_offset);
+    unsigned int hold_offset,
+    char quoted_flag);
 
 PARSER_PIPELINE __PARSER_PIPELINES[10] = {
     ParserTypingExit,
@@ -68,19 +69,17 @@ void ParserTyping()
       else if (prefix->tail != prefix->head + hold_offset)
         prefix->tail++;
 
-      if (!quoted_flag)
+      for (
+          unsigned int index = current_pipeline >= 0 ? current_pipeline : 0;
+          status == PARSER_PIPELINE_STATUS_PASS && __PARSER_PIPELINES[index] != NULL;
+          index++)
       {
-        for (
-            unsigned int index = current_pipeline >= 0 ? current_pipeline : 0;
-            status == PARSER_PIPELINE_STATUS_PASS && __PARSER_PIPELINES[index] != NULL;
-            index++)
-        {
-          status = __PARSER_PIPELINES[index](prefix, suffix, prefix->tail - prefix->head);
-          if (status == PARSER_PIPELINE_STATUS_HOLD)
-            hold_offset = prefix->tail - prefix->head, current_pipeline = index;
-          else
-            current_pipeline = hold_offset = -1;
-        }
+        status =
+            __PARSER_PIPELINES[index](prefix, suffix, prefix->tail - prefix->head, quoted_flag);
+        if (status == PARSER_PIPELINE_STATUS_HOLD)
+          hold_offset = prefix->tail - prefix->head, current_pipeline = index;
+        else
+          current_pipeline = hold_offset = -1;
       }
 
       if (status == PARSER_PIPELINE_STATUS_PASS)
@@ -95,7 +94,7 @@ void ParserTyping()
         ParserTypingBufferPushOne(prefix, ParserGetChar());
       else
         prefix->tail++;
-      status = __PARSER_PIPELINES[current_pipeline](prefix, suffix, hold_offset);
+      status = __PARSER_PIPELINES[current_pipeline](prefix, suffix, hold_offset, quoted_flag);
     }
     else if (status == PARSER_PIPELINE_STATUS_CATCH)
     {
