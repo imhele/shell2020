@@ -4,7 +4,7 @@
 #include <libgen.h>
 #include <unistd.h>
 #include "../utils/helpers/string.h"
-#include "cwd.h"
+#include "../utils/path/cwd.h"
 #include "variable.h"
 
 char *ParserPS1()
@@ -13,7 +13,7 @@ char *ParserPS1()
   char *home_var = NULL;
   char *user_var = NULL;
   // char *host_var = NULL;
-  char *cwd = ParserCWD();
+  char *cwd = PathCWD();
   getShellVariable("PS1", ps1_var);
   getShellVariable("HOME", home_var);
   getShellVariable("USER", user_var);

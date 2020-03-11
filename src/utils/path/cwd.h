@@ -1,11 +1,11 @@
-#ifndef __HLIB_PARSER_CWD
-#define __HLIB_PARSER_CWD
+#ifndef __HLIB_UTILS_PATH_CWD
+#define __HLIB_UTILS_PATH_CWD
 
 #include <string.h>
 #include <unistd.h>
-#include "../utils/helpers/calloc.h"
+#include "../helpers/calloc.h"
 
-char *ParserCWD()
+char *PathCWD()
 {
   char *cwd = HLIB_CALLOC_N(char, 128);
   getcwd(cwd, 128);
@@ -18,4 +18,4 @@ char *ParserCWD()
   return cwd;
 }
 
-#endif /* __HLIB_PARSER_CWD */
+#endif /* __HLIB_UTILS_PATH_CWD */

@@ -1,7 +1,6 @@
 #ifndef __HLIB_PARSER
 #define __HLIB_PARSER
 
-#include "parser/cwd.h"
 #include "parser/echo.h"
 #include "parser/getch.h"
 #include "parser/getcursor.h"

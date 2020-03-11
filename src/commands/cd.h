@@ -4,8 +4,8 @@
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
-#include "../parser/cwd.h"
 #include "../utils/path/clean.h"
+#include "../utils/path/cwd.h"
 #include "../utils/path/join.h"
 #include "meta.h"
 
@@ -14,7 +14,7 @@ int CommandCD(char **argv)
   char *path = argv == NULL ? NULL : *argv;
 
   if (path == NULL)
-    path = ParserCWD();
+    path = PathCWD();
   else if (!strcmp(path, "--help") || !strcmp(path, "-h"))
   {
     struct CommandMetaArgumentsMap *options = NULL;
@@ -30,7 +30,7 @@ int CommandCD(char **argv)
     return 0;
   }
   else if (path[0] == '~')
-    path = PathJoin(ParserCWD(), path + 1, ENDARG);
+    path = PathJoin(PathCWD(), path + 1, ENDARG);
   else
     path = PathClean(path);
   return chdir(path);
