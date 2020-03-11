@@ -31,16 +31,19 @@ PARSER_PIPELINE_STATUS ParserTypingLeftRight(
 
       if (is_right && suffix->tail - suffix->head)
       {
-        ParserTypingBufferPush(prefix, suffix->head, 1);
-        memcpy(suffix->head, suffix->head + 1, suffix->size * sizeof(char));
-        suffix->tail--;
+        unsigned int unicode_size = ParserTypingGetFirstUnicodeSize(suffix);
+        suffix->tail -= unicode_size;
+        ParserTypingBufferPush(prefix, suffix->head, unicode_size);
+        memcpy(suffix->head, suffix->head + unicode_size, suffix->size * sizeof(char));
         return PARSER_PIPELINE_STATUS_RESET;
       }
 
       if (is_left && prefix->tail - prefix->head)
       {
-        ParserTypingBufferUnshift(suffix, prefix->tail - 1, 1);
-        *(--prefix->tail) = 0;
+        unsigned int unicode_size = ParserTypingGetLastUnicodeSize(prefix);
+        prefix->tail -= unicode_size;
+        ParserTypingBufferUnshift(suffix, prefix->tail, unicode_size);
+        memset(prefix->tail, 0, unicode_size * sizeof(char));
         return PARSER_PIPELINE_STATUS_RESET;
       }
 
