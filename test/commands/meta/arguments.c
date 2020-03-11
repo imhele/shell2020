@@ -66,5 +66,7 @@ int main()
   }
   ENDCLOSURE;
 
+  CommandMetaArgumentsMapFree(&options);
+
   return 0;
 }

@@ -6,6 +6,7 @@
 #include "parser/getch.h"
 #include "parser/getcursor.h"
 #include "parser/history.h"
+#include "parser/parsecmd.h"
 #include "parser/pipeline.h"
 #include "parser/ps1.h"
 #include "parser/typing.h"
