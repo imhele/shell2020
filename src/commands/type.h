@@ -9,6 +9,7 @@
 #include "../utils/helpers/closure.h"
 #include "../utils/helpers/string.h"
 #include "../utils/path/join.h"
+#include "meta/builtincmd.h"
 
 char *CommandTypeGetPath(char *name)
 {
@@ -33,6 +34,13 @@ char *CommandTypeGetPath(char *name)
   return NULL;
 }
 
+ShellBuiltinCommand CommandTypeGetBuiltin(char *name)
+{
+  ShellBuiltinCommand builtin_command = NULL;
+  useSpecClosureValue(name, builtin_command);
+  return builtin_command;
+}
+
 int CommandType(char **argv)
 {
   char *name = argv == NULL ? NULL : *argv;
@@ -40,9 +48,7 @@ int CommandType(char **argv)
   if (name == NULL)
     return putchar('\n');
 
-  int (*internal_command)(char **argv) = NULL;
-  useSpecClosureValue(name, internal_command);
-  if (internal_command != NULL)
+  if (CommandTypeGetBuiltin(name) != NULL)
     return printf("%s is a shell builtin\n", name);
 
   char *path = CommandTypeGetPath(name);
