@@ -7,11 +7,13 @@
 #include "_enum.h"
 
 PARSER_PIPELINE_STATUS ParserTypingLeftRight(
-    struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix, long hold_offset)
+    struct ParserTypingBuffer *prefix,
+    struct ParserTypingBuffer *suffix,
+    unsigned int hold_offset)
 {
   if (*(prefix->head + hold_offset - 1) == '\033')
   {
-    long cache_len = prefix->tail - prefix->head - hold_offset;
+    unsigned int cache_len = prefix->tail - prefix->head - hold_offset;
     if (cache_len == 0)
       return PARSER_PIPELINE_STATUS_HOLD;
     if (cache_len == 1 && *(prefix->tail - 1) == '[')

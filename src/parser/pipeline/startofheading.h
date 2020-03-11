@@ -6,7 +6,9 @@
 #include "_enum.h"
 
 PARSER_PIPELINE_STATUS ParserTypingStartOfHeading(
-    struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix, long hold_offset)
+    struct ParserTypingBuffer *prefix,
+    struct ParserTypingBuffer *suffix,
+    unsigned int hold_offset)
 {
   if (*(prefix->tail - 1) == 1)
   {

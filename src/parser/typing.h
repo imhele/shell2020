@@ -10,7 +10,9 @@
 #include "ps1.h"
 
 typedef PARSER_PIPELINE_STATUS (*PARSER_PIPELINE)(
-    struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix, long hold_offset);
+    struct ParserTypingBuffer *prefix,
+    struct ParserTypingBuffer *suffix,
+    unsigned int hold_offset);
 
 PARSER_PIPELINE __PARSER_PIPELINES[10] = {
     ParserTypingExit,
@@ -24,11 +26,10 @@ void __ParserTypingSetQuotedFlag(struct ParserTypingBuffer *prefix, char *quoted
 
 void ParserTyping()
 {
-  // int *cursor_coord;
   char quoted_flag = 0;
-  long hold_offset = -1;
-  long current_pipeline = -1;
   char *ps1 = ParserPS1();
+  unsigned int hold_offset = -1;
+  unsigned int current_pipeline = -1;
   PARSER_PIPELINE_STATUS status = PARSER_PIPELINE_STATUS_RESET;
   struct ParserTypingBuffer *prefix = HLIB_CALLOC(struct ParserTypingBuffer);
   struct ParserTypingBuffer *suffix = HLIB_CALLOC(struct ParserTypingBuffer);
@@ -74,7 +75,7 @@ void ParserTyping()
       if (!quoted_flag)
       {
         for (
-            long index = current_pipeline >= 0 ? current_pipeline : 0;
+            unsigned int index = current_pipeline >= 0 ? current_pipeline : 0;
             status == PARSER_PIPELINE_STATUS_PASS && __PARSER_PIPELINES[index] != NULL;
             index++)
         {
