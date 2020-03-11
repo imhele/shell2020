@@ -16,7 +16,7 @@ void ParserTypingBufferCalloc(struct ParserTypingBuffer *buffer, unsigned int ex
     return;
 
   unsigned int next_size = buffer->size + (extra_size < 32 ? 32 : extra_size);
-  char *next_head = HLIB_CALLOC_N(char, next_size + 1);
+  char *next_head = HLIB_CALLOC_N(char, next_size);
 
   if (buffer->size)
   {
@@ -51,12 +51,12 @@ void ParserTypingBufferUnshift(struct ParserTypingBuffer *buffer, char *value, u
   unsigned int next_size = (buffer->tail - buffer->head + size >= buffer->size)
                       ? buffer->size + (size < 32 ? 32 : size)
                       : buffer->size;
-  char *next_head = HLIB_CALLOC_N(char, next_size + 1);
+  char *next_head = HLIB_CALLOC_N(char, next_size);
   memcpy(next_head, value, size * sizeof(char));
 
   if (buffer->size)
   {
-    memcpy(next_head + size, buffer->head, buffer->size * sizeof(char));
+    memcpy(next_head + size, buffer->head, (buffer->tail - buffer->head) * sizeof(char));
     free(buffer->head);
   }
 
