@@ -12,12 +12,15 @@
 typedef PARSER_PIPELINE_STATUS (*PARSER_PIPELINE)(
     struct ParserTypingBuffer *prefix, struct ParserTypingBuffer *suffix, long hold_offset);
 
-PARSER_PIPELINE __PARSER_PIPELINES[4] = {
+PARSER_PIPELINE __PARSER_PIPELINES[10] = {
     ParserTypingExit,
     ParserTypingStartOfHeading,
     ParserTypingLeftRight,
+    ParserTypingESC,
     NULL,
 };
+
+void __ParserTypingSetQuotedFlag(struct ParserTypingBuffer *prefix, char *quoted_flag);
 
 void ParserTyping()
 {
@@ -52,15 +55,18 @@ void ParserTyping()
 
     if (status == PARSER_PIPELINE_STATUS_PASS)
     {
-      if (current_pipeline >= 0 && hold_offset >= 0)
-        if (prefix->tail - prefix->head > hold_offset)
+      if (current_pipeline >= 0)
+      {
+        if (__PARSER_PIPELINES[++current_pipeline] == NULL)
+          current_pipeline = hold_offset = -1;
+        else if (prefix->tail - prefix->head > hold_offset)
           prefix->tail = prefix->head + hold_offset;
+      }
 
       if (!*prefix->tail)
       {
         ParserTypingBufferPushOne(prefix, ParserGetChar());
-        if (*(prefix->tail - 1) == 39 || *(prefix->tail - 1) == 34)
-          quoted_flag = quoted_flag == *(prefix->tail - 1) ? 0 : *(prefix->tail - 1);
+        __ParserTypingSetQuotedFlag(prefix, &quoted_flag);
       }
       else if (prefix->tail != prefix->head + hold_offset)
         prefix->tail++;
@@ -90,11 +96,7 @@ void ParserTyping()
     else if (status == PARSER_PIPELINE_STATUS_HOLD)
     {
       if (!*prefix->tail)
-      {
         ParserTypingBufferPushOne(prefix, ParserGetChar());
-        if (*(prefix->tail - 1) == 39 || *(prefix->tail - 1) == 34)
-          quoted_flag = quoted_flag == *(prefix->tail - 1) ? 0 : *(prefix->tail - 1);
-      }
       else
         prefix->tail++;
       status = __PARSER_PIPELINES[current_pipeline](prefix, suffix, hold_offset);
@@ -107,6 +109,12 @@ void ParserTyping()
   }
 
   ParserGetCharClean();
+}
+
+void __ParserTypingSetQuotedFlag(struct ParserTypingBuffer *prefix, char *quoted_flag)
+{
+  if (*(prefix->tail - 1) == 39 || *(prefix->tail - 1) == 34)
+    *quoted_flag = *quoted_flag == *(prefix->tail - 1) ? 0 : *(prefix->tail - 1);
 }
 
 #endif /* __HLIB_PARSER_TYPING */
