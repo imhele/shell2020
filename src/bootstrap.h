@@ -7,12 +7,16 @@
 
 void ShellBootstrap()
 {
-  SHELLCLOSURE
+  CLOSURE
   {
-    __HLIB_PARSER_VARIABLE_BOOTSTRAP();
-    __HLIB_PARSER_COMMAND_HISTORY_BOOTSTRAP();
+    SHELLCLOSURE
+    {
+      ParserVariableBootstrap();
+      ParserCommandHistoryBootstrap();
+    }
+    ENDSHELLCLOSURE;
   }
-  ENDSHELLCLOSURE;
+  ENDCLOSURE;
 }
 
 #endif /* __HLIB_BOOTSTRAP */

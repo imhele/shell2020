@@ -27,7 +27,7 @@ void ParserCommandHistoryAdd(char *command)
   __HLIB_PARSER_COMMAND_HISTORIES_HEAD++;
 }
 
-void __HLIB_PARSER_COMMAND_HISTORY_BOOTSTRAP()
+void ParserCommandHistoryBootstrap()
 {
   char *home = "~/";
   getShellVariable("HOME", home);

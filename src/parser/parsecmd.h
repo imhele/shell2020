@@ -6,7 +6,7 @@
 
 struct ParsedCommand
 {
-  char *path;
+  char *name;
   char **argv;
   char **envp;
 };

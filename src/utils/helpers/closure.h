@@ -31,4 +31,16 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
       variable = *((typeof(&variable))__CLOSURE_VARIABLE_MAP_ITEM->value);                    \
   })
 
+#define useClosureSpecValue(name, variable)                                                   \
+  ({                                                                                          \
+    struct MapItem *__CLOSURE_VARIABLE_MAP_ITEM = NULL;                                       \
+    struct LinkList *__CLOSURE_VARIABLE_UPPER_LEVEL_MAP = __CLOSURE_VARIABLE_MAPS;            \
+    for (; __CLOSURE_VARIABLE_MAP_ITEM == NULL && __CLOSURE_VARIABLE_UPPER_LEVEL_MAP != NULL; \
+         __CLOSURE_VARIABLE_UPPER_LEVEL_MAP = __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->next)       \
+      __CLOSURE_VARIABLE_MAP_ITEM = MapGet(                                                   \
+          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->value, (void *)name, MapIsStringKeyEqual);      \
+    if (__CLOSURE_VARIABLE_MAP_ITEM != NULL)                                                  \
+      variable = *((typeof(&variable))__CLOSURE_VARIABLE_MAP_ITEM->value);                    \
+  })
+
 #endif /* __HLIB_UTILS_STRUCTS_CLOSURE */

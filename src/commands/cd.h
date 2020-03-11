@@ -3,14 +3,15 @@
 
 #include <assert.h>
 #include <string.h>
+#include <unistd.h>
 #include "../parser/cwd.h"
 #include "../utils/path/clean.h"
 #include "../utils/path/join.h"
 #include "meta.h"
 
-void CommandCD(char **argv, char **envp)
+int CommandCD(char **argv)
 {
-  char *path = argv == NULL ? NULL : (char *)*argv;
+  char *path = argv == NULL ? NULL : *argv;
 
   if (path == NULL)
     path = ParserCWD();
@@ -26,13 +27,13 @@ void CommandCD(char **argv, char **envp)
     printf("cd: %s\n", (char *)usage->value);
     CommandMetaArgumentsMapFree(&options);
     LinkListFreeValue(&usage);
-    return;
+    return 0;
   }
   else if (path[0] == '~')
     path = PathJoin(ParserCWD(), path + 1, ENDARG);
   else
     path = PathClean(path);
-  assert(chdir(path) == 0);
+  return chdir(path);
 }
 
 #endif /* __HLIB_COMMANDS_CD */

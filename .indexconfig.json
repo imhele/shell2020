@@ -3,5 +3,5 @@
   "extname": ".h",
   "entry": "main",
   "macroprefix": "__HLIB",
-  "excludes": []
+  "excludes": ["^src/commands.h$"]
 }

@@ -57,7 +57,7 @@ void ParserVariableUnsafeExec(char *command)
   free(copied_command);
 }
 
-void __HLIB_PARSER_VARIABLE_BOOTSTRAP()
+void ParserVariableBootstrap()
 {
   for (char **var = environ; *var != NULL; var++)
     ParserVariableUnsafeExec(*var);
