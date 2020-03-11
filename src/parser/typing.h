@@ -26,7 +26,7 @@ PARSER_PIPELINE __PARSER_PIPELINES[10] = {
 
 void __ParserTypingSetQuotedFlag(struct ParserTypingBuffer *prefix, char *quoted_flag);
 
-void ParserTyping()
+char *ParserTyping()
 {
   char quoted_flag = 0;
   char *ps1 = ParserPS1();
@@ -105,12 +105,22 @@ void ParserTyping()
 
   ParserGetCharClean();
 
+  unsigned int prefix_len = prefix->tail - prefix->head;
+  unsigned int suffix_len = suffix->tail - suffix->head;
+  char *command = HLIB_CALLOC_N(char, prefix_len + suffix_len + 1);
+  if (prefix_len)
+    memcpy(command, prefix->head, prefix_len * sizeof(char));
+  if (suffix_len)
+    memcpy(command + prefix_len, suffix->head, suffix_len * sizeof(char));
+
   free(prefix->head);
   free(suffix->head);
   free(ps1);
   free(prefix);
   free(suffix);
   free(echo_meta);
+
+  return command;
 }
 
 void __ParserTypingSetQuotedFlag(struct ParserTypingBuffer *prefix, char *quoted_flag)
