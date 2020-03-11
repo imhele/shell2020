@@ -4,9 +4,9 @@
 #include <assert.h>
 #include <string.h>
 #include <unistd.h>
-#include "../utils/path/clean.h"
+#include "../parser/variable.h"
+#include "../utils/path/absolute.h"
 #include "../utils/path/cwd.h"
-#include "../utils/path/join.h"
 #include "meta.h"
 
 int CommandCD(char **argv)
@@ -29,10 +29,13 @@ int CommandCD(char **argv)
     LinkListFreeValue(&usage);
     return 0;
   }
-  else if (path[0] == '~')
-    path = PathJoin(PathCWD(), path + 1, ENDARG);
   else
-    path = PathClean(path);
+  {
+    char *home = "~/";
+    getShellVariable("HOME", home);
+    path = PathAbsolute(path, home);
+  }
+
   return chdir(path);
 }
 
