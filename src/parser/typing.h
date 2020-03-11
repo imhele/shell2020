@@ -19,6 +19,7 @@ typedef PARSER_PIPELINE_STATUS (*PARSER_PIPELINE)(
 PARSER_PIPELINE __PARSER_PIPELINES[10] = {
     ParserTypingExit,
     ParserTypingStartOfHeading,
+    ParserTypingDel,
     ParserTypingLeftRight,
     ParserTypingESC,
     NULL,

@@ -3,6 +3,7 @@
 
 #include "pipeline/_buffer.h"
 #include "pipeline/_enum.h"
+#include "pipeline/del.h"
 #include "pipeline/esc.h"
 #include "pipeline/exit.h"
 #include "pipeline/leftright.h"
