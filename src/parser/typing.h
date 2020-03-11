@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include "../utils/helpers/calloc.h"
 #include "../utils/pretty/terminal.h"
+#include "echo.h"
 #include "getch.h"
 #include "pipeline.h"
 #include "ps1.h"
@@ -33,6 +34,7 @@ void ParserTyping()
   PARSER_PIPELINE_STATUS status = PARSER_PIPELINE_STATUS_RESET;
   struct ParserTypingBuffer *prefix = HLIB_CALLOC(struct ParserTypingBuffer);
   struct ParserTypingBuffer *suffix = HLIB_CALLOC(struct ParserTypingBuffer);
+  struct ParserTypingEchoMeta *echo_meta = HLIB_CALLOC(struct ParserTypingEchoMeta);
   ParserTypingBufferCalloc(prefix, 0);
   ParserTypingBufferCalloc(suffix, 0);
 
@@ -44,14 +46,8 @@ void ParserTyping()
     {
       current_pipeline = hold_offset = -1;
       status = PARSER_PIPELINE_STATUS_PASS;
-      printf(
-          "\r%s%s%s%s%s%s",
-          HLIB_TERMINAL_CONFIG(TERMINAL_CLEAN),
-          ps1,
-          prefix->head,
-          HLIB_TERMINAL_CONFIG(TERMINAL_SAVE_CURSOR),
-          suffix->head,
-          HLIB_TERMINAL_CONFIG(TERMINAL_RECOVER_CURSOR));
+      ParserEchoCleanFromHead(echo_meta);
+      ParserEcho(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail, echo_meta);
     }
 
     if (status == PARSER_PIPELINE_STATUS_PASS)
@@ -88,11 +84,10 @@ void ParserTyping()
       }
 
       if (status == PARSER_PIPELINE_STATUS_PASS)
-        printf("%c%s%s%s",
-               *(prefix->tail - 1),
-               HLIB_TERMINAL_CONFIG(TERMINAL_SAVE_CURSOR),
-               suffix->head,
-               HLIB_TERMINAL_CONFIG(TERMINAL_RECOVER_CURSOR));
+      {
+        ParserEchoCleanFromHead(echo_meta);
+        ParserEcho(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail, echo_meta);
+      }
     }
     else if (status == PARSER_PIPELINE_STATUS_HOLD)
     {
@@ -110,6 +105,13 @@ void ParserTyping()
   }
 
   ParserGetCharClean();
+
+  free(prefix->head);
+  free(suffix->head);
+  free(ps1);
+  free(prefix);
+  free(suffix);
+  free(echo_meta);
 }
 
 void __ParserTypingSetQuotedFlag(struct ParserTypingBuffer *prefix, char *quoted_flag)

@@ -31,7 +31,7 @@
 #define TERMINAL_HIDDEN "8"
 #define TERMINAL_CLEAN "K"
 #define TERMINAL_CLEAN_ALL "2J"
-#define TERMINAL_CURSOR(x, y) x ";" y "H"
+#define TERMINAL_CURSOR(y, x) y ";" x "H"
 #define TERMINAL_GET_CURSOR "6n"
 #define TERMINAL_SAVE_CURSOR "s"
 #define TERMINAL_RECOVER_CURSOR "u"

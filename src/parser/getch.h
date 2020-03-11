@@ -14,10 +14,10 @@ void ParserGetCharPreset()
 {
   if (!__HLIB_OLD_TERMIOS_FLAG)
   {
-    assert(tcgetattr(0, &__HLIB_OLD_TERMIOS) >= 0);
+    assert(tcgetattr(STDIN_FILENO, &__HLIB_OLD_TERMIOS) >= 0);
     __HLIB_RAW_TERMIOS = __HLIB_OLD_TERMIOS;
     cfmakeraw(&__HLIB_RAW_TERMIOS);
-    assert(tcsetattr(0, TCSANOW, &__HLIB_RAW_TERMIOS) >= 0);
+    assert(tcsetattr(STDIN_FILENO, TCSANOW, &__HLIB_RAW_TERMIOS) >= 0);
     __HLIB_OLD_TERMIOS_FLAG = true;
   }
 }
@@ -26,7 +26,7 @@ void ParserGetCharClean()
 {
   if (__HLIB_OLD_TERMIOS_FLAG)
   {
-    assert(tcsetattr(0, TCSANOW, &__HLIB_OLD_TERMIOS) >= 0);
+    assert(tcsetattr(STDIN_FILENO, TCSANOW, &__HLIB_OLD_TERMIOS) >= 0);
     __HLIB_OLD_TERMIOS_FLAG = false;
   }
 }
