@@ -19,6 +19,9 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
 #define useClosure(variable) \
   (MapSet(__CLOSURE_VARIABLE_MAPS->value, (void *)#variable, &variable, MapIsStringKeyEqual))
 
+#define useSpecClosure(name, variable) \
+  (MapSet(__CLOSURE_VARIABLE_MAPS->value, (void *)name, &variable, MapIsStringKeyEqual))
+
 #define useClosureValue(variable)                                                             \
   ({                                                                                          \
     struct MapItem *__CLOSURE_VARIABLE_MAP_ITEM = NULL;                                       \
@@ -31,7 +34,7 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
       variable = *((typeof(&variable))__CLOSURE_VARIABLE_MAP_ITEM->value);                    \
   })
 
-#define useClosureSpecValue(name, variable)                                                   \
+#define useSpecClosureValue(name, variable)                                                   \
   ({                                                                                          \
     struct MapItem *__CLOSURE_VARIABLE_MAP_ITEM = NULL;                                       \
     struct LinkList *__CLOSURE_VARIABLE_UPPER_LEVEL_MAP = __CLOSURE_VARIABLE_MAPS;            \

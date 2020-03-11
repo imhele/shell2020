@@ -13,6 +13,7 @@ void ShellBootstrap()
     {
       ParserVariableBootstrap();
       ParserCommandHistoryBootstrap();
+      CommandsBootstrap();
     }
     ENDSHELLCLOSURE;
   }

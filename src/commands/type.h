@@ -41,7 +41,7 @@ int CommandType(char **argv)
     return putchar('\n');
 
   int (*internal_command)(char **argv) = NULL;
-  useClosureSpecValue(name, internal_command);
+  useSpecClosureValue(name, internal_command);
   if (internal_command != NULL)
     return printf("%s is a shell builtin\n", name);
 
