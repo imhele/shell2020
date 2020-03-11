@@ -53,7 +53,7 @@ char **HLIB_STRSPLIT(const char *str, const char delimiter)
       copied_str[i] = '\0';
     }
   char **result = HLIB_CALLOC_N(char *, count);
-  for (int i = 0, j = 0; i <= len; i++, j++)
+  for (int i = 0, j = 0; j < count - 1; i++, j++)
   {
     result[j] = copied_str + i;
     while (copied_str[i] != '\0')

@@ -9,6 +9,7 @@
 #include "../utils/helpers/closure.h"
 #include "../utils/helpers/string.h"
 #include "../utils/path/join.h"
+#include "../utils/structs/bool.h"
 #include "meta/builtincmd.h"
 
 char *CommandTypeGetPath(char *name)
@@ -41,12 +42,20 @@ ShellBuiltinCommand CommandTypeGetBuiltin(char *name)
   return builtin_command;
 }
 
+bool CommandTypeMaybeFile(char *name)
+{
+  return name[0] == '/' || (name[0] == '.' && name[1] != '\0');
+}
+
 int CommandType(char **argv)
 {
   char *name = argv == NULL ? NULL : *argv;
 
   if (name == NULL)
     return putchar('\n');
+
+  if (CommandTypeMaybeFile(name))
+    return printf("%s is %s", name, name);
 
   if (CommandTypeGetBuiltin(name) != NULL)
     return printf("%s is a shell builtin\n", name);
