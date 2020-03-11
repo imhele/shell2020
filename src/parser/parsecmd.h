@@ -49,9 +49,9 @@ char **ParserParseCommandSplit(char *str)
 struct LinkList *ParserParseCommand(char *command)
 {
   // bool env_flag = true;
-  struct LinkList *parsed_commands = NULL;
   struct ParsedCommand *single_command = NULL;
   char **splited = ParserParseCommandSplit(command);
+  struct LinkList *parsed_commands = LinkListPush(NULL, splited, ENDARG);
 
   for (char **segment = splited; *segment != NULL; segment++)
   {
@@ -63,6 +63,7 @@ struct LinkList *ParserParseCommand(char *command)
     {
       if (single_command != NULL)
         parsed_commands = LinkListPush(parsed_commands, single_command, ENDARG);
+      *segment = NULL;
       single_command = NULL;
       continue;
     }
