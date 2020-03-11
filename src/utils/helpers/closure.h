@@ -17,10 +17,10 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
   })
 
 #define useClosure(variable) \
-  (MapSet(__CLOSURE_VARIABLE_MAPS->value, (void *)#variable, &variable, MapIsStringKeyEqual))
+  (MapSet(__CLOSURE_VARIABLE_MAPS->value, #variable, &variable, MapIsStringKeyEqual))
 
 #define useSpecClosure(name, variable) \
-  (MapSet(__CLOSURE_VARIABLE_MAPS->value, (void *)name, &variable, MapIsStringKeyEqual))
+  (MapSet(__CLOSURE_VARIABLE_MAPS->value, name, variable, MapIsStringKeyEqual))
 
 #define useClosureValue(variable)                                                             \
   ({                                                                                          \
@@ -29,7 +29,7 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
     for (; __CLOSURE_VARIABLE_MAP_ITEM == NULL && __CLOSURE_VARIABLE_UPPER_LEVEL_MAP != NULL; \
          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP = __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->next)       \
       __CLOSURE_VARIABLE_MAP_ITEM = MapGet(                                                   \
-          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->value, (void *)#variable, MapIsStringKeyEqual); \
+          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->value, #variable, MapIsStringKeyEqual);         \
     if (__CLOSURE_VARIABLE_MAP_ITEM != NULL)                                                  \
       variable = *((typeof(&variable))__CLOSURE_VARIABLE_MAP_ITEM->value);                    \
   })
@@ -41,9 +41,9 @@ struct LinkList *__CLOSURE_VARIABLE_MAPS = NULL;
     for (; __CLOSURE_VARIABLE_MAP_ITEM == NULL && __CLOSURE_VARIABLE_UPPER_LEVEL_MAP != NULL; \
          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP = __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->next)       \
       __CLOSURE_VARIABLE_MAP_ITEM = MapGet(                                                   \
-          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->value, (void *)name, MapIsStringKeyEqual);      \
+          __CLOSURE_VARIABLE_UPPER_LEVEL_MAP->value, name, MapIsStringKeyEqual);              \
     if (__CLOSURE_VARIABLE_MAP_ITEM != NULL)                                                  \
-      variable = *((typeof(&variable))__CLOSURE_VARIABLE_MAP_ITEM->value);                    \
+      variable = (typeof(variable))__CLOSURE_VARIABLE_MAP_ITEM->value;                        \
   })
 
 #endif /* __HLIB_UTILS_STRUCTS_CLOSURE */

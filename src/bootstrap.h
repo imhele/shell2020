@@ -14,6 +14,13 @@ void ShellBootstrap()
       ParserVariableBootstrap();
       ParserCommandHistoryBootstrap();
       CommandsBootstrap();
+
+      char *buf;
+      while (true)
+      {
+        buf = ParserTyping();
+        CommandExec(ParserParseCommand(buf));
+      }
     }
     ENDSHELLCLOSURE;
   }

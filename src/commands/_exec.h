@@ -38,10 +38,10 @@ void CommandExec(struct LinkList *parsed_commands)
   struct LinkList *curr_command = (struct LinkList *)parsed_commands;
 
   while (!exit_code && (curr_command = curr_command->next) != NULL)
-    exit_code = __CommandExecSingle(curr_command);
+    exit_code = __CommandExecSingle((struct ParsedCommand *)curr_command->value);
 
   free(*splited);
-  free(splited);
+  LinkListFreeValue(&parsed_commands);
 }
 
 #endif /* __HLIB_COMMANDS_EXEC */

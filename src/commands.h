@@ -1,6 +1,7 @@
 #ifndef __HLIB_COMMANDS
 #define __HLIB_COMMANDS
 
+#include "commands/_exec.h"
 #include "commands/cd.h"
 #include "commands/meta.h"
 #include "commands/type.h"
