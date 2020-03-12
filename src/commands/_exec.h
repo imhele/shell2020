@@ -21,9 +21,12 @@ int __CommandExecSingle(struct ParsedCommand *parsed_command)
     command_path = parsed_command->name;
 
   if (fork())
-    wait(0);
+    wait(&exit_code), exit_code = WEXITSTATUS(exit_code);
   else
-    exit(exit_code = execvp(command_path, parsed_command->argv));
+    exit(execvp(command_path, parsed_command->argv));
+
+  if (exit_code > 1)
+    printf("%s: exit with code %d.\n", parsed_command->name, exit_code);
 
   return exit_code;
 }
