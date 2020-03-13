@@ -4,6 +4,7 @@
 #include "commands/_exec.h"
 #include "commands/_meta.h"
 #include "commands/cd.h"
+#include "commands/echo.h"
 #include "commands/export.h"
 #include "commands/pwd.h"
 #include "commands/type.h"
@@ -13,12 +14,14 @@
 void CommandsBootstrap()
 {
   useSpecClosure("cd", CommandCD);
+  useSpecClosure("echo", CommandEcho);
   useSpecClosure("export", CommandExport);
   useSpecClosure("pwd", CommandPWD);
   useSpecClosure("type", CommandType);
   useSpecClosure("unset", CommandUnset);
 
   CommandCDBootstrap();
+  CommandEchoBootstrap();
   CommandExportBootstrap();
   CommandPWDBootstrap();
   CommandTypeBootstrap();
@@ -31,6 +34,7 @@ void CommandsCleanup()
   CommandTypeCleanup();
   CommandPWDCleanup();
   CommandExportCleanup();
+  CommandEchoCleanup();
   CommandCDCleanup();
 }
 
