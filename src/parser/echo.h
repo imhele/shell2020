@@ -19,7 +19,7 @@ struct ParserTypingEchoMeta
   unsigned long suffix_length;
 };
 
-void ParserEcho(
+void ParserEchoUpdateMeta(
     char *ps1,
     char *prefix_head,
     char *prefix_tail,
@@ -39,7 +39,15 @@ void ParserEcho(
   echo_meta->prev_prefix_tail = prefix_tail;
   echo_meta->prev_suffix_head = suffix_head;
   echo_meta->prev_suffix_tail = suffix_tail;
+}
 
+void ParserEcho(
+    char *ps1,
+    char *prefix_head,
+    char *prefix_tail,
+    char *suffix_head,
+    char *suffix_tail)
+{
   if (ps1 != NULL)
     printf("\r%s%s%s%s%s",
            ps1,

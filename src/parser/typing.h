@@ -44,12 +44,17 @@ char *ParserTyping()
 
   while (status != PARSER_PIPELINE_STATUS_EXIT && status != PARSER_PIPELINE_STATUS_ENDL)
   {
-    if (status == PARSER_PIPELINE_STATUS_RESET)
+    if (status == PARSER_PIPELINE_STATUS_RESET || status == PARSER_PIPELINE_STATUS_FLUSH)
     {
+      if (status != PARSER_PIPELINE_STATUS_FLUSH)
+        ParserEchoCleanFromHead(echo_meta);
+      ParserEchoUpdateMeta(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail, echo_meta);
+      if (status == PARSER_PIPELINE_STATUS_FLUSH)
+        ParserEchoCleanFromHead(echo_meta);
+      ParserEcho(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail);
+
       current_pipeline = hold_offset = -1;
       status = PARSER_PIPELINE_STATUS_PASS;
-      ParserEchoCleanFromHead(echo_meta);
-      ParserEcho(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail, echo_meta);
     }
 
     if (status == PARSER_PIPELINE_STATUS_PASS)
@@ -86,7 +91,8 @@ char *ParserTyping()
       if (status == PARSER_PIPELINE_STATUS_PASS)
       {
         ParserEchoCleanFromHead(echo_meta);
-        ParserEcho(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail, echo_meta);
+        ParserEchoUpdateMeta(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail, echo_meta);
+        ParserEcho(ps1, prefix->head, prefix->tail, suffix->head, suffix->tail);
       }
     }
     else if (status == PARSER_PIPELINE_STATUS_HOLD)
