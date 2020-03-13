@@ -34,9 +34,18 @@ char *HLIB_STRREPEAT(const char *str, int n)
   if (n <= 0)
     return result;
   unsigned long len = strlen((char *)str);
-  result = HLIB_CALLOC_N(char, len *n + 1);
+  result = HLIB_CALLOC_N(char, (len * n) + 1);
   for (int i = 0; i < n; i++)
     strcpy(result + len * i, str);
+  return result;
+}
+
+char *HLIB_STRREV(const char *str)
+{
+  unsigned long len = strlen((char *)str);
+  char *result = HLIB_CALLOC_N(char, len + 1);
+  for (int i = 0; i < len; i++)
+    result[i] = str[len - i - 1];
   return result;
 }
 

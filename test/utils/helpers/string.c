@@ -35,6 +35,15 @@ bool testStrRepeat()
   return flag;
 }
 
+
+bool testStrRev()
+{
+  char *str = HLIB_STRREV("abcdef");
+  bool flag = !strcmp(str, "fedcba");
+  free(str);
+  return flag;
+}
+
 bool testStrSplit()
 {
   bool flag = true;
@@ -53,6 +62,7 @@ int main()
   HLIB_ASSERT_TEST(testStrCat);
   HLIB_ASSERT_TEST(testStrCatLeft);
   HLIB_ASSERT_TEST(testStrRepeat);
+  HLIB_ASSERT_TEST(testStrRev);
   HLIB_ASSERT_TEST(testStrSplit);
   return 0;
 }
