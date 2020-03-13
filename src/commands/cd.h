@@ -9,6 +9,7 @@
 #include "../utils/helpers/closure.h"
 #include "../utils/path/join.h"
 #include "../utils/path/startswithhome.h"
+#include "../utils/pretty/terminal.h"
 #include "_meta.h"
 
 int CommandCD(char **argv)
@@ -33,9 +34,11 @@ int CommandCD(char **argv)
   {
     struct CommandMetaArgumentsMap *cd_meta = NULL;
     useSpecClosureValue("__cd_meta", cd_meta);
-    struct LinkList *usage = CommandMetaArgumentsMapToString(cd_meta, 0, true, DEFAULTARG);
+    struct LinkList *usage = CommandMetaArgumentsMapToString(cd_meta, 1, true, DEFAULTARG);
     assert(usage != NULL);
-    printf("cd: %s\n", (char *)usage->value);
+    printf("usage of %s:\n", HLIB_TERMINAL_STRING("cd", TERMINAL_HIGHLIGHT));
+    for (int index = LinkListLength(usage); index--;)
+      printf("\t%s\n", (char *)LinkListGetter(usage, index));
     LinkListFreeValue(&usage);
     return 0;
   }
@@ -68,8 +71,10 @@ int CommandCD(char **argv)
   return chdir(path);
 }
 
-struct CommandMetaArgument __COMMAND_CD_META_ARG_HELP = {0, "h", "Show the usage of command.", NULL};
-struct CommandMetaArgument __COMMAND_CD_META_ARG_PATH = {1, NULL, "Absolute or relative path.", NULL};
+struct CommandMetaArgument __COMMAND_CD_META_ARG_HELP =
+    {0, "h", "Show the usage of command.", NULL};
+struct CommandMetaArgument __COMMAND_CD_META_ARG_PATH =
+    {1, NULL, "Absolute or relative path.", NULL};
 
 void CommandCDBootstrap()
 {

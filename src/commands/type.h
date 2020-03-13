@@ -9,6 +9,7 @@
 #include "../utils/helpers/closure.h"
 #include "../utils/helpers/string.h"
 #include "../utils/path/join.h"
+#include "../utils/pretty/terminal.h"
 #include "../utils/structs/bool.h"
 #include "_meta.h"
 
@@ -57,9 +58,11 @@ int CommandType(char **argv)
   {
     struct CommandMetaArgumentsMap *type_meta = NULL;
     useSpecClosureValue("__type_meta", type_meta);
-    struct LinkList *usage = CommandMetaArgumentsMapToString(type_meta, 0, true, DEFAULTARG);
+    struct LinkList *usage = CommandMetaArgumentsMapToString(type_meta, 1, true, DEFAULTARG);
     assert(usage != NULL);
-    printf("type: %s\n", (char *)usage->value);
+    printf("usage of %s:\n", HLIB_TERMINAL_STRING("type", TERMINAL_HIGHLIGHT));
+    for (int index = LinkListLength(usage); index--;)
+      printf("\t%s\n", (char *)LinkListGetter(usage, index));
     LinkListFreeValue(&usage);
     return 0;
   }
@@ -83,8 +86,10 @@ int CommandType(char **argv)
   return 0;
 }
 
-struct CommandMetaArgument __COMMAND_TYPE_META_ARG_HELP = {0, "h", "Show the usage of command.", NULL};
-struct CommandMetaArgument __COMMAND_TYPE_META_ARG_PATH = {1, NULL, "Any path or global command.", NULL};
+struct CommandMetaArgument __COMMAND_TYPE_META_ARG_HELP =
+    {0, "h", "Show the usage of command.", NULL};
+struct CommandMetaArgument __COMMAND_TYPE_META_ARG_PATH =
+    {1, NULL, "Any path or global command.", NULL};
 
 void CommandTypeBootstrap()
 {
