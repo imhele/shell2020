@@ -48,14 +48,14 @@ void __SHELL_VARIABLE_MAP_FREE_EACH(void *value, void *key, struct Map *curr)
       target = NULL, HLIB_STRCAT(target, __SHELL_VARIABLE_MAP_ITEM->value);               \
   })
 
-void ParserVariableUnsafeExec(char *command)
+void ParserVariablePut(char *command)
 {
   char *name = NULL;
   char *value = NULL;
   char *copied_command = NULL;
   HLIB_STRCAT(copied_command, command);
   char *split_at = strchr(copied_command, '=');
-  if (split_at != NULL)
+  if (split_at != NULL && split_at != copied_command)
   {
     *split_at = '\0';
     HLIB_STRCAT(name, copied_command);
@@ -67,8 +67,8 @@ void ParserVariableUnsafeExec(char *command)
 
 void ParserVariableBootstrap()
 {
-  for (char **var = environ; *var != NULL; var++)
-    ParserVariableUnsafeExec(*var);
+  // for (char **var = environ; *var != NULL; var++)
+  //   ParserVariableUnsafeExec(*var);
 }
 
 void ParserVariableCleanup()

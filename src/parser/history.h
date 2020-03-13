@@ -31,8 +31,8 @@ void ParserCommandHistoryAdd(char *command)
 
 void ParserCommandHistoryBootstrap()
 {
-  char *home = "~/";
-  getShellVariable("HOME", home);
+  char *home = getenv("HOME");
+  home = home == NULL ? "~/" : home;
   __HLIB_PARSER_COMMAND_HISTORIES_FILE = PathJoin(home, ".bash_history", ENDARG);
   FILE *fp = fopen(__HLIB_PARSER_COMMAND_HISTORIES_FILE, "r");
   if (fp != NULL)

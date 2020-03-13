@@ -3,9 +3,9 @@
 
 #include <assert.h>
 #include <dirent.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include "../parser/variable.h"
 #include "../utils/helpers/closure.h"
 #include "../utils/helpers/string.h"
 #include "../utils/path/join.h"
@@ -14,9 +14,8 @@
 
 char *CommandTypeGetPath(char *name)
 {
-  char *PATH = NULL;
+  char *PATH = getenv("PATH");
   struct dirent *curr_dirent;
-  getShellVariable("PATH", PATH);
 
   if (PATH != NULL)
   {
@@ -26,10 +25,13 @@ char *CommandTypeGetPath(char *name)
         if (!strcmp(curr_dirent->d_name, name))
         {
           name = PathJoin(*curr_path, name, ENDARG);
-          free(PATH), free(*PATHS), free(PATHS);
+          free(*PATHS);
+          free(PATHS);
           return name;
         }
-    free(PATH), free(*PATHS), free(PATHS), PATH = NULL;
+
+    free(*PATHS);
+    free(PATHS);
   }
 
   return NULL;

@@ -3,9 +3,9 @@
 
 #include <assert.h>
 #include <string.h>
+#include <stdlib.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "../parser/variable.h"
 #include "../utils/helpers/closure.h"
 #include "../utils/path/join.h"
 #include "../utils/path/startswithhome.h"
@@ -19,21 +19,14 @@ int CommandCD(char **argv)
 
   if (path == NULL || path[0] == '\0')
   {
-    getShellVariable("HOME", home);
+    path = "--help";
+    home = getenv("HOME");
     if (home != NULL)
     {
       if (PrintAccessError("cd", home, X_OK))
-      {
-        free(home);
         return -1;
-      }
-
-      chdir(home);
-      free(home);
-      return 0;
+      return chdir(home);
     }
-
-    path = "--help";
   }
 
   if (!strcmp(path, "--help") || !strcmp(path, "-h"))
@@ -49,7 +42,7 @@ int CommandCD(char **argv)
 
   if (PathStartsWithHome(path))
   {
-    getShellVariable("HOME", home);
+    home = getenv("HOME");
     if (home == NULL)
     {
       printf("cd: environment variable 'HOME' does not exist, unable to locate.");
@@ -61,13 +54,11 @@ int CommandCD(char **argv)
     if (PrintAccessError("cd", path, X_OK))
     {
       free(path);
-      free(home);
       return -1;
     }
 
     chdir(path);
     free(path);
-    free(home);
     return 0;
   }
 
