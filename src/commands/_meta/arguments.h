@@ -1,5 +1,5 @@
-#ifndef __HLIB_COMMANDS_META_ARGUMENTS
-#define __HLIB_COMMANDS_META_ARGUMENTS
+#ifndef __HLIB_COMMANDS__META_ARGUMENTS
+#define __HLIB_COMMANDS__META_ARGUMENTS
 
 #include "../../utils/helpers/closure.h"
 #include "../../utils/helpers/string.h"
@@ -180,4 +180,4 @@ struct LinkList *CommandMetaArgumentsMapToString(
   return result;
 }
 
-#endif /* __HLIB_COMMANDS_META_ARGUMENTS */
+#endif /* __HLIB_COMMANDS__META_ARGUMENTS */

@@ -8,22 +8,14 @@
 int __CommandExecSingle(struct ParsedCommand *parsed_command)
 {
   int exit_code = 0;
-  char *command_path = NULL;
-  if (!CommandTypeMaybeFile(parsed_command->name))
-  {
-    ShellBuiltinCommand builtin = CommandTypeGetBuiltin(parsed_command->name);
-    if (builtin != NULL)
-      return builtin(parsed_command->argv);
-    command_path = CommandTypeGetPath(parsed_command->name);
-  }
-
-  if (command_path == NULL)
-    command_path = parsed_command->name;
+  ShellBuiltinCommand builtin = CommandTypeGetBuiltin(parsed_command->name);
+  if (builtin != NULL)
+    return builtin(parsed_command->argv);
 
   if (fork())
     wait(&exit_code), exit_code = WEXITSTATUS(exit_code);
   else
-    exit(execvp(command_path, parsed_command->argv));
+    exit(execvp(parsed_command->name, parsed_command->argv));
 
   if (exit_code > 1)
     printf("%s: exit with code %d.\n", parsed_command->name, exit_code);
