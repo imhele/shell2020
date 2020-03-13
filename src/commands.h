@@ -11,11 +11,15 @@ void CommandsBootstrap()
 {
   useSpecClosure("cd", CommandCD);
   useSpecClosure("type", CommandType);
+
+  CommandCDBootstrap();
+  CommandTypeBootstrap();
 }
 
 void CommandsCleanup()
 {
-  return;
+  CommandTypeCleanup();
+  CommandCDCleanup();
 }
 
 #endif /* __HLIB_COMMANDS */

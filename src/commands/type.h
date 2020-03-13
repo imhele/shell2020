@@ -54,6 +54,17 @@ int CommandType(char **argv)
   if (name == NULL)
     return putchar('\n');
 
+  if (!strcmp(name, "--help") || !strcmp(name, "-h"))
+  {
+    struct CommandMetaArgumentsMap *type_meta = NULL;
+    useSpecClosureValue("__type_meta", type_meta);
+    struct LinkList *usage = CommandMetaArgumentsMapToString(type_meta, 0, true, DEFAULTARG);
+    assert(usage != NULL);
+    printf("type: %s\n", (char *)usage->value);
+    LinkListFreeValue(&usage);
+    return 0;
+  }
+
   if (CommandTypeMaybeFile(name))
   {
     if (PrintAccessError("type", name, X_OK))
@@ -71,6 +82,26 @@ int CommandType(char **argv)
   printf("%s is %s\n", name, path);
   free(path);
   return 0;
+}
+
+struct CommandMetaArgument __COMMAND_TYPE_META_ARG_HELP = {0, "h", "Show the usage of command.", NULL};
+struct CommandMetaArgument __COMMAND_TYPE_META_ARG_PATH = {1, NULL, "Any path or global command.", NULL};
+
+void CommandTypeBootstrap()
+{
+  struct CommandMetaArgumentsMap *type_meta = NULL;
+  type_meta = CommandMetaArgumentRegister(type_meta, "help", &__COMMAND_TYPE_META_ARG_HELP);
+  type_meta = CommandMetaArgumentRegister(type_meta, "path", &__COMMAND_TYPE_META_ARG_PATH);
+
+  useSpecClosure("__type_meta", type_meta);
+}
+
+void CommandTypeCleanup()
+{
+  struct CommandMetaArgumentsMap *type_meta = NULL;
+  useSpecClosureValue("__type_meta", type_meta);
+  if (type_meta != NULL)
+    CommandMetaArgumentsMapFree(&type_meta);
 }
 
 #endif /* __HLIB_COMMANDS_TYPE */
