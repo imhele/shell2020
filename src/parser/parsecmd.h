@@ -15,8 +15,8 @@ struct ParsedCommand
 
 char **ParserParseCommandSplit(char *str)
 {
-  int count = 2;
-  int len = strlen(str);
+  unsigned int count = 2;
+  unsigned int len = strlen(str);
   char *quoted_flag = NULL;
   char *copied_str = HLIB_CALLOC_N(char, len + 1);
   char *copied_char = copied_str;
@@ -37,7 +37,7 @@ char **ParserParseCommandSplit(char *str)
       *(copied_char++) = *curr_char;
 
   char **result = HLIB_CALLOC_N(char *, count);
-  for (int i = 0, j = 0; j < count - 1; i++, j++)
+  for (unsigned int i = 0, j = 0; j < count - 1; i++, j++)
   {
     result[j] = copied_str + i;
     while (copied_str[i] != '\0')

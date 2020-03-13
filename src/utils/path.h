@@ -5,5 +5,6 @@
 #include "path/clean.h"
 #include "path/cwd.h"
 #include "path/join.h"
+#include "path/startswithhome.h"
 
 #endif /* __HLIB_UTILS_PATH */

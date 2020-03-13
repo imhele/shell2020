@@ -4,6 +4,7 @@
 #include "clean.h"
 #include "cwd.h"
 #include "join.h"
+#include "startswithhome.h"
 
 char *PathAbsolute(char *path, char *home)
 {
@@ -11,7 +12,7 @@ char *PathAbsolute(char *path, char *home)
     return PathCWD();
   if (path[0] == '/')
     return PathClean(path);
-  if (path[0] == '~')
+  if (PathStartsWithHome(path))
     return PathJoin(home, path + 1, ENDARG);
   return PathJoin(PathCWD(), path, ENDARG);
 }
