@@ -33,3 +33,23 @@ $ sh scripts/test.sh
 $ sh scripts/test.sh test/utils
 $ sh scripts/test.sh test/utils/helpers/closure.c
 ```
+
+### Build Index
+
+约定 `src` 内的所有目录都有一个对应的同名头文件，作为目录内的文件与子目录的索引。可选择执行 [NodeJS](https://nodejs.org/) 脚本自动构建：
+
+```bash
+$ node scripts/buildindex.js
+```
+
+可在 `.indexconfig.json` 文件中配置 `excludes` 忽略条件，每项条件将被转为正则表达式进行匹配：
+
+```json
+{
+  "root": "src",
+  "extname": ".h",
+  "entry": "main",
+  "macroprefix": "__HLIB",
+  "excludes": ["^src/commands.h$"]
+}
+```
