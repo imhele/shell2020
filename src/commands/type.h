@@ -51,10 +51,7 @@ int CommandType(char **argv)
 {
   char *name = argv == NULL ? NULL : *argv;
 
-  if (name == NULL)
-    return putchar('\n');
-
-  if (!strcmp(name, "--help") || !strcmp(name, "-h"))
+  if (name == NULL || !strcmp(name, "--help") || !strcmp(name, "-h"))
   {
     struct CommandMetaArgumentsMap *type_meta = NULL;
     useSpecClosureValue("__type_meta", type_meta);
