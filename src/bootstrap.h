@@ -19,6 +19,7 @@ void ShellBootstrap()
       while (true)
       {
         buf = ParserTyping();
+        ParserCommandHistoryAdd(buf);
         CommandExec(ParserParseCommand(buf));
       }
     }
