@@ -21,7 +21,7 @@ int CommandCD(char **argv)
     getShellVariable("HOME", home);
     if (home != NULL)
     {
-      if (PrintAccessError(access(home, R_OK)))
+      if (PrintAccessError("cd", home, X_OK))
       {
         free(home);
         return -1;
@@ -61,7 +61,7 @@ int CommandCD(char **argv)
 
     path = PathJoin(home, path + 1, ENDARG);
 
-    if (PrintAccessError(access(path, R_OK)))
+    if (PrintAccessError("cd", path, X_OK))
     {
       free(path);
       free(home);
@@ -74,7 +74,7 @@ int CommandCD(char **argv)
     return 0;
   }
 
-  if (PrintAccessError(access(path, R_OK)))
+  if (PrintAccessError("cd", path, X_OK))
     return -1;
 
   return chdir(path);

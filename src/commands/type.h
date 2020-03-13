@@ -10,7 +10,7 @@
 #include "../utils/helpers/string.h"
 #include "../utils/path/join.h"
 #include "../utils/structs/bool.h"
-#include "_meta/builtincmd.h"
+#include "_meta.h"
 
 char *CommandTypeGetPath(char *name)
 {
@@ -55,7 +55,12 @@ int CommandType(char **argv)
     return putchar('\n');
 
   if (CommandTypeMaybeFile(name))
-    return printf("%s is %s", name, name);
+  {
+    if (PrintAccessError("type", name, X_OK))
+      return -1;
+    printf("%s is %s\n", name, name);
+    return 0;
+  }
 
   if (CommandTypeGetBuiltin(name) != NULL)
     return printf("%s is a shell builtin\n", name);

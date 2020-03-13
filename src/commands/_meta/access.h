@@ -6,48 +6,56 @@
 #include <unistd.h>
 #include "../../utils/structs/bool.h"
 
-bool PrintAccessError(int code)
+char *__AccessModeTestFailedMessage[5] = {
+    "target not exists",
+    "file is not executable or directory is inaccessible",
+    "target is not writable",
+    "cannot access target",
+    "target is not readable",
+};
+
+bool PrintAccessError(char *prefix, char *path, int mode)
 {
-  if (code == 0)
+  if (access(path, mode) == 0)
     return false;
 
   switch (errno)
   {
   case EINVAL:
-    puts("access: invalid access mode.");
+    printf("%s: invalid access mode.\n", prefix);
     break;
   case EACCES:
-    puts("access: cannot access target.");
+    printf("%s: %s.\n", prefix, __AccessModeTestFailedMessage[mode]);
     break;
   case ELOOP:
-    puts("access: too many symbolic link.");
+    printf("%s: too many symbolic link.\n", prefix);
     break;
   case ENAMETOOLONG:
-    puts("access: name is too long.");
+    printf("%s: name is too long.\n", prefix);
     break;
   case ENOENT:
-    puts("access: target not found.");
+    printf("%s: target not found.\n", prefix);
     break;
   case ENOTDIR:
-    puts("access: target is not a directory.");
+    printf("%s: target is not a directory.\n", prefix);
     break;
   case EROFS:
-    puts("access: file system is readonly.");
+    printf("%s: file system is readonly.\n", prefix);
     break;
   case EFAULT:
-    puts("access: target is out of reach.");
+    printf("%s: target is out of reach.\n", prefix);
     break;
   case EIO:
-    puts("access: i/o failed.");
+    printf("%s: i/o failed.\n", prefix);
     break;
   case ENOMEM:
-    puts("access: cannot get enough kernel memory.");
+    printf("%s: cannot get enough kernel memory.\n", prefix);
     break;
   case ETXTBSY:
-    puts("access: write to program failed.");
+    printf("%s: write to program failed.\n", prefix);
     break;
   default:
-    puts("access: unknown error.");
+    printf("%s: unknown error.\n", prefix);
     break;
   }
 
