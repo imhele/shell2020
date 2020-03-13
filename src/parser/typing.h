@@ -42,7 +42,7 @@ char *ParserTyping()
 
   ParserGetCharPreset();
 
-  while (status != PARSER_PIPELINE_STATUS_EXIT)
+  while (status != PARSER_PIPELINE_STATUS_EXIT && status != PARSER_PIPELINE_STATUS_ENDL)
   {
     if (status == PARSER_PIPELINE_STATUS_RESET)
     {
@@ -106,13 +106,18 @@ char *ParserTyping()
 
   ParserGetCharClean();
 
-  unsigned int prefix_len = prefix->tail - prefix->head;
-  unsigned int suffix_len = suffix->tail - suffix->head;
-  char *command = HLIB_CALLOC_N(char, prefix_len + suffix_len + 1);
-  if (prefix_len)
-    memcpy(command, prefix->head, prefix_len * sizeof(char));
-  if (suffix_len)
-    memcpy(command + prefix_len, suffix->head, suffix_len * sizeof(char));
+  char *command = NULL;
+
+  if (status == PARSER_PIPELINE_STATUS_ENDL)
+  {
+    unsigned int prefix_len = prefix->tail - prefix->head;
+    unsigned int suffix_len = suffix->tail - suffix->head;
+    command = HLIB_CALLOC_N(char, prefix_len + suffix_len + 1);
+    if (prefix_len)
+      memcpy(command, prefix->head, prefix_len * sizeof(char));
+    if (suffix_len)
+      memcpy(command + prefix_len, suffix->head, suffix_len * sizeof(char));
+  }
 
   free(prefix->head);
   free(suffix->head);

@@ -6,9 +6,11 @@
 #include "../utils/path/join.h"
 #include "variable.h"
 
+#define __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS (256)
+
 int __HLIB_PARSER_COMMAND_HISTORIES_HEAD = 0;
 char *__HLIB_PARSER_COMMAND_HISTORIES_FILE = NULL;
-char *__HLIB_PARSER_COMMAND_HISTORIES[256] = {0};
+char *__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS] = {0};
 
 void ParserCommandHistoryAdd(char *command)
 {
@@ -39,6 +41,13 @@ void ParserCommandHistoryBootstrap()
       ParserCommandHistoryAdd(FileGetOneLine(fp));
     fclose(fp);
   }
+}
+
+void ParserCommandHistoryCleanup()
+{
+  for (int index = 0; index < __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS; index++)
+    if (__HLIB_PARSER_COMMAND_HISTORIES[index] != NULL)
+      free(__HLIB_PARSER_COMMAND_HISTORIES[index]);
 }
 
 #endif /* __HLIB_PARSER_HISTORY */

@@ -15,13 +15,17 @@ void ShellBootstrap()
       ParserCommandHistoryBootstrap();
       CommandsBootstrap();
 
-      char *buf;
-      while (true)
+      for (char *buf; (buf = ParserTyping()) != NULL;)
       {
-        buf = ParserTyping();
         ParserCommandHistoryAdd(buf);
         CommandExec(ParserParseCommand(buf));
       }
+
+      CommandsCleanup();
+      ParserCommandHistoryCleanup();
+      ParserVariableCleanup();
+
+      HLIB_TERMINAL_PRINTF_ENDL("\nexit", TERMINAL_HIGHLIGHT);
     }
     ENDSHELLCLOSURE;
   }

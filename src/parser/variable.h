@@ -9,15 +9,23 @@
 extern char **environ;
 struct LinkList *__SHELL_VARIABLE_MAPS = NULL;
 
+void __SHELL_VARIABLE_MAP_FREE_EACH(void *value, void *key, struct Map *curr)
+{
+  if (value != NULL)
+    free(value);
+  if (key != NULL)
+    free(key);
+}
+
 #define SHELLCLOSURE \
   ({             \
     __SHELL_VARIABLE_MAPS = LinkListUnshift(__SHELL_VARIABLE_MAPS, MapCreate(NULL), ENDARG);
 
-#define ENDSHELLCLOSURE                                                      \
-  MapFree((struct Map **)&(__SHELL_VARIABLE_MAPS->value));                   \
-  struct LinkList *__SHELL_VARIABLE_NEXT_MAPS = __SHELL_VARIABLE_MAPS->next; \
-  free(__SHELL_VARIABLE_MAPS);                                               \
-  __SHELL_VARIABLE_MAPS = __SHELL_VARIABLE_NEXT_MAPS;                        \
+#define ENDSHELLCLOSURE                                                                        \
+  MapFreeEach((struct Map **)&(__SHELL_VARIABLE_MAPS->value), __SHELL_VARIABLE_MAP_FREE_EACH); \
+  struct LinkList *__SHELL_VARIABLE_NEXT_MAPS = __SHELL_VARIABLE_MAPS->next;                   \
+  free(__SHELL_VARIABLE_MAPS);                                                                 \
+  __SHELL_VARIABLE_MAPS = __SHELL_VARIABLE_NEXT_MAPS;                                          \
   })
 
 #define setShellVariable(name, value)                                                           \
@@ -61,6 +69,11 @@ void ParserVariableBootstrap()
 {
   for (char **var = environ; *var != NULL; var++)
     ParserVariableUnsafeExec(*var);
+}
+
+void ParserVariableCleanup()
+{
+  return;
 }
 
 #endif /* __HLIB_PARSER_VARIABLE */

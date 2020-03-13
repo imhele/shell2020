@@ -13,4 +13,9 @@ void CommandsBootstrap()
   useSpecClosure("type", CommandType);
 }
 
+void CommandsCleanup()
+{
+  return;
+}
+
 #endif /* __HLIB_COMMANDS */

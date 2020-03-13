@@ -12,13 +12,13 @@ PARSER_PIPELINE_STATUS ParserTypingExit(
     char quoted_flag)
 {
   if (*(prefix->tail - 1) == 4)
-    HLIB_TERMINAL_PRINTF_ENDL("\nexit", TERMINAL_HIGHLIGHT), exit(0);
+    return PARSER_PIPELINE_STATUS_EXIT;
 
   if (*(prefix->tail - 1) == '\r')
   {
     *(prefix->tail - 1) = 0;
     putchar('\n');
-    return PARSER_PIPELINE_STATUS_EXIT;
+    return PARSER_PIPELINE_STATUS_ENDL;
   }
 
   return PARSER_PIPELINE_STATUS_PASS;
