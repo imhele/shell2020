@@ -7,6 +7,7 @@
 #include "commands/export.h"
 #include "commands/pwd.h"
 #include "commands/type.h"
+#include "commands/unset.h"
 #include "utils/helpers/closure.h"
 
 void CommandsBootstrap()
@@ -15,15 +16,18 @@ void CommandsBootstrap()
   useSpecClosure("export", CommandExport);
   useSpecClosure("pwd", CommandPWD);
   useSpecClosure("type", CommandType);
+  useSpecClosure("unset", CommandUnset);
 
   CommandCDBootstrap();
   CommandExportBootstrap();
   CommandPWDBootstrap();
   CommandTypeBootstrap();
+  CommandUnsetBootstrap();
 }
 
 void CommandsCleanup()
 {
+  CommandUnsetCleanup();
   CommandTypeCleanup();
   CommandPWDCleanup();
   CommandExportCleanup();
