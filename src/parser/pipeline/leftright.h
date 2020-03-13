@@ -32,9 +32,12 @@ PARSER_PIPELINE_STATUS ParserTypingLeftRight(
       if (is_right && suffix->tail - suffix->head)
       {
         unsigned int unicode_size = ParserTypingGetFirstUnicodeSize(suffix);
+        unsigned int suffix_move_size = suffix->tail - suffix->head - unicode_size;
+
         suffix->tail -= unicode_size;
         ParserTypingBufferPush(prefix, suffix->head, unicode_size);
-        memcpy(suffix->head, suffix->head + unicode_size, suffix->size * sizeof(char));
+        memcpy(suffix->head, suffix->head + unicode_size, suffix_move_size * sizeof(char));
+        memset(suffix->head + suffix_move_size, 0, unicode_size * sizeof(char));
         return PARSER_PIPELINE_STATUS_RESET;
       }
 

@@ -8,6 +8,7 @@
 #include "pipeline/esc.h"
 #include "pipeline/exit.h"
 #include "pipeline/leftright.h"
+#include "pipeline/skipword.h"
 #include "pipeline/startofheading.h"
 
 #endif /* __HLIB_PARSER_PIPELINE */
