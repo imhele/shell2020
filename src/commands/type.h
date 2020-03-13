@@ -10,7 +10,7 @@
 #include "../utils/helpers/string.h"
 #include "../utils/path/join.h"
 #include "../utils/structs/bool.h"
-#include "meta/builtincmd.h"
+#include "_meta/builtincmd.h"
 
 char *CommandTypeGetPath(char *name)
 {

@@ -3,7 +3,7 @@
 
 #include "commands/_exec.h"
 #include "commands/cd.h"
-#include "commands/meta.h"
+#include "commands/_meta.h"
 #include "commands/type.h"
 #include "utils/helpers/closure.h"
 

@@ -7,7 +7,7 @@
 #include "../parser/variable.h"
 #include "../utils/path/absolute.h"
 #include "../utils/path/cwd.h"
-#include "meta.h"
+#include "_meta.h"
 
 int CommandCD(char **argv)
 {
