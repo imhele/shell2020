@@ -13,6 +13,7 @@ PARSER_PIPELINE_STATUS ParserTypingStartOfHeading(
 {
   if (*(prefix->tail - 1) == 1)
   {
+    *(--prefix->tail) = 0;
     ParserTypingBufferUnshift(suffix, prefix->head, prefix->tail - prefix->head);
     memset(prefix->tail = prefix->head, 0, prefix->size * sizeof(char));
     return PARSER_PIPELINE_STATUS_RESET;
