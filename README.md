@@ -17,14 +17,14 @@
 | --------------- | -------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | Control + C     | `\003`   | 忽略已输入的内容，直接换行                                 | [src/parser/pipeline/exit.h ](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/exit.h)                      |
 | Control + D     | `\004`   | 退出 Shell                                                 | [src/parser/pipeline/exit.h ](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/exit.h)                      |
-| Enter           | `\013`   | 执行已输入的内容并换行                                     | [src/parser/pipeline/exit.h ](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/exit.h)                      |
+| Enter           | `\015`   | 执行已输入的内容并换行                                     | [src/parser/pipeline/exit.h ](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/exit.h)                      |
 | Left            | `\033[D` | 将光标向左移动一位                                         | [src/parser/pipeline/leftright.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/leftright.h)             |
 | Right           | `\033[C` | 将光标向右移动一位                                         | [src/parser/pipeline/leftright.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/leftright.h)             |
 | Command + Left  | `\001`   | 将光标移到行首                                             | [src/parser/pipeline/startofheading.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/startofheading.h)   |
 | Command + Right | `\005`   | 将光标移到行尾                                             | [src/parser/pipeline/enquiry.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/enquiry.h)                 |
-| Delete          | `\127`   | 删除一位光标前的字符                                       | [src/parser/pipeline/del.h ](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/del.h)                        |
-| Option + Left   | `\001`   | 将光标移到从光标左侧第二个字符开始的第一个分隔符右侧       | [src/parser/pipeline/skipword.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/skipword.h)               |
-| Option + Right  | `\005`   | 将光标移到从光标右侧第二个字符开始的第一个分隔符左侧       | [src/parser/pipeline/skipword.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/skipword.h)               |
+| Delete          | `\177`   | 删除一位光标前的字符                                       | [src/parser/pipeline/del.h ](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/del.h)                        |
+| Option + Left   | `\033b`  | 将光标移到从光标左侧第二个字符开始的第一个分隔符右侧       | [src/parser/pipeline/skipword.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/skipword.h)               |
+| Option + Right  | `\033f`  | 将光标移到从光标右侧第二个字符开始的第一个分隔符左侧       | [src/parser/pipeline/skipword.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/skipword.h)               |
 | Option + Delete | `\027`   | 删除从光标左侧第二个字符开始，向左直到第一个分隔符内的字符 | [src/parser/pipeline/endoftransblock.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/endoftransblock.h) |
 
 ## 💡 Build
