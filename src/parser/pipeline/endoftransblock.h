@@ -16,7 +16,6 @@ PARSER_PIPELINE_STATUS ParserTypingEndOfTransBlock(
 {
   if (*(prefix->tail - 1) == 23)
   {
-    putchar('a');
     *(--prefix->tail) = 0;
     if (prefix->tail - prefix->head <= 0)
       return PARSER_PIPELINE_STATUS_CATCH;
