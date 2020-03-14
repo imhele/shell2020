@@ -26,6 +26,8 @@
 | Option + Left   | `\033b`  | 将光标移到从光标左侧第二个字符开始的第一个分隔符右侧       | [src/parser/pipeline/skipword.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/skipword.h)               |
 | Option + Right  | `\033f`  | 将光标移到从光标右侧第二个字符开始的第一个分隔符左侧       | [src/parser/pipeline/skipword.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/skipword.h)               |
 | Option + Delete | `\027`   | 删除从光标左侧第二个字符开始，向左直到第一个分隔符内的字符 | [src/parser/pipeline/endoftransblock.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/endoftransblock.h) |
+| Up              | `\033[A` | 恢复上一条执行过的命令                                     | [src/parser/pipeline/updown.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/updown.h)                   |
+| Down            | `\033[B` | 恢复下一条执行过的命令                                     | [src/parser/pipeline/updown.h](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline/updown.h)                   |
 
 ## 💡 Build
 
