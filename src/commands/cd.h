@@ -15,7 +15,7 @@
 int CommandCD(char **argv)
 {
   char *home = NULL;
-  struct stat path_stat;
+  // struct stat path_stat;
   char *path = argv == NULL ? NULL : *argv;
 
   if (path == NULL || path[0] == '\0')

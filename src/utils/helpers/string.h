@@ -30,9 +30,9 @@
 
 char *HLIB_STRREPEAT(const char *str, int n)
 {
-  char *result;
   if (n <= 0)
-    return result;
+    return HLIB_CALLOC(char);
+  char *result;
   unsigned long len = strlen((char *)str);
   result = HLIB_CALLOC_N(char, (len * n) + 1);
   for (int i = 0; i < n; i++)
