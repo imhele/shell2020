@@ -23,6 +23,7 @@ PARSER_PIPELINE __PARSER_PIPELINES[10] = {
     ParserTypingEnquiry,
     ParserTypingDel,
     ParserTypingSkipWord,
+    ParserTypingEndOfTransBlock,
     ParserTypingESC,
     NULL,
 };
