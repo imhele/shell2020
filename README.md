@@ -7,7 +7,7 @@
 ## 🍕 Feature
 
 - 👆 参照手势响应原理实现的键入响应，支持基础的快捷键操作 [`src/parser/pipeline`](https://github.com/imhele/shell2020/tree/master/src/parser/pipeline)。
-- 🎨 Unicode 字符支持。
+- 🎨 POSIX 与 Unicode 支持。
 - 🌟 环境变量与输入历史记录支持。
 - 💄 局部变量[参照 JS 闭包特性实现](https://github.com/imhele/blog/issues/7)，支持多层闭包内同名变量的跨函数引用。
 
