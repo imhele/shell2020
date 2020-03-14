@@ -11,5 +11,6 @@
 #include "pipeline/leftright.h"
 #include "pipeline/skipword.h"
 #include "pipeline/startofheading.h"
+#include "pipeline/updown.h"
 
 #endif /* __HLIB_PARSER_PIPELINE */

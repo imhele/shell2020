@@ -8,25 +8,34 @@
 
 #define __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS (256)
 
-int __HLIB_PARSER_COMMAND_HISTORIES_HEAD = 0;
+int __HLIB_PARSER_COMMAND_HISTORIES_TAIL = 0;
 char *__HLIB_PARSER_COMMAND_HISTORIES_FILE = NULL;
 char *__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS] = {0};
+
+int ParserCommandHistoryGetNextIndex(int current, int offset)
+{
+  current += offset % __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS;
+  if (current >= __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS)
+    current -= __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS;
+  else if (current < 0)
+    current += __HLIB_PARSER_COMMAND_HISTORIES_MAX_RECORDS;
+  return current;
+}
 
 void ParserCommandHistoryAdd(char *command)
 {
   if (command == NULL)
     return;
-  if (__HLIB_PARSER_COMMAND_HISTORIES_HEAD > 255)
-    __HLIB_PARSER_COMMAND_HISTORIES_HEAD = 0;
 
-  if (__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_HEAD] != NULL)
-    free(__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_HEAD]);
+  if (__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_TAIL] != NULL)
+    free(__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_TAIL]);
 
-  __HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_HEAD] =
+  __HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_TAIL] =
       HLIB_CALLOC_N(char, strlen(command));
-  strcpy(__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_HEAD], command);
+  strcpy(__HLIB_PARSER_COMMAND_HISTORIES[__HLIB_PARSER_COMMAND_HISTORIES_TAIL], command);
 
-  __HLIB_PARSER_COMMAND_HISTORIES_HEAD++;
+  __HLIB_PARSER_COMMAND_HISTORIES_TAIL =
+      ParserCommandHistoryGetNextIndex(__HLIB_PARSER_COMMAND_HISTORIES_TAIL, 1);
 }
 
 void ParserCommandHistoryBootstrap()
@@ -37,8 +46,9 @@ void ParserCommandHistoryBootstrap()
   FILE *fp = fopen(__HLIB_PARSER_COMMAND_HISTORIES_FILE, "r");
   if (fp != NULL)
   {
-    while (!feof(fp))
-      ParserCommandHistoryAdd(FileGetOneLine(fp));
+    for (char *cmd = FileGetOneLine(fp); !feof(fp); cmd = FileGetOneLine(fp))
+      if (cmd[0] != '\0' && (cmd[0] != '\n' || cmd[1] != '\0'))
+        ParserCommandHistoryAdd(cmd);
     fclose(fp);
   }
 }

@@ -24,6 +24,7 @@ PARSER_PIPELINE __PARSER_PIPELINES[10] = {
     ParserTypingDel,
     ParserTypingSkipWord,
     ParserTypingEndOfTransBlock,
+    ParserTypingUpDown,
     ParserTypingESC,
     NULL,
 };
