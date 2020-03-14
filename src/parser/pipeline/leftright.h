@@ -12,7 +12,7 @@ PARSER_PIPELINE_STATUS ParserTypingLeftRight(
     unsigned int hold_offset,
     char quoted_flag)
 {
-  if (*(prefix->head + hold_offset - 1) == '\033')
+  if (*(prefix->head + hold_offset - 1) == 27)
   {
     unsigned int cache_len = prefix->tail - prefix->head - hold_offset;
     if (cache_len == 0)

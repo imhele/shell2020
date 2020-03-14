@@ -11,7 +11,7 @@ PARSER_PIPELINE_STATUS ParserTypingESC(
     unsigned int hold_offset,
     char quoted_flag)
 {
-  if (*(prefix->tail - 1) == '\033')
+  if (*(prefix->tail - 1) == 27)
     *(prefix->tail - 1) = '^';
 
   return PARSER_PIPELINE_STATUS_PASS;

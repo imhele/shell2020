@@ -15,7 +15,7 @@ PARSER_PIPELINE_STATUS ParserTypingSkipWord(
     unsigned int hold_offset,
     char quoted_flag)
 {
-  if (*(prefix->head + hold_offset - 1) == '\033')
+  if (*(prefix->head + hold_offset - 1) == 27)
   {
     unsigned int cache_len = prefix->tail - prefix->head - hold_offset;
     if (cache_len == 0)
@@ -32,8 +32,8 @@ PARSER_PIPELINE_STATUS ParserTypingSkipWord(
 
       if (is_right && suffix->tail - suffix->head)
       {
-        char *go_back = strpbrk(suffix->head, ParserTypingSkipWordSeparator);
-        unsigned int go_back_size = (go_back == NULL ? suffix->tail : go_back + 1) - suffix->head;
+        char *go_back = strpbrk(suffix->head + 1, ParserTypingSkipWordSeparator);
+        unsigned int go_back_size = (go_back == NULL ? suffix->tail : go_back) - suffix->head;
         unsigned int suffix_move_size = suffix->tail - suffix->head - go_back_size;
 
         suffix->tail -= go_back_size;
@@ -46,9 +46,10 @@ PARSER_PIPELINE_STATUS ParserTypingSkipWord(
       if (is_left && prefix->tail - prefix->head)
       {
         char *rev_prefix = HLIB_STRREV(prefix->head);
-        char *go_back = strpbrk(rev_prefix, ParserTypingSkipWordSeparator);
+        char *go_back = strpbrk(rev_prefix + 1, ParserTypingSkipWordSeparator);
         unsigned int go_back_size =
-            go_back == NULL ? prefix->tail - prefix->head : go_back - rev_prefix + 1;
+            go_back == NULL ? prefix->tail - prefix->head : go_back - rev_prefix;
+        free(rev_prefix);
         prefix->tail -= go_back_size;
         ParserTypingBufferUnshift(suffix, prefix->tail, go_back_size);
         memset(prefix->tail, 0, go_back_size * sizeof(char));
